@@ -1,0 +1,2461 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pentas Juara Seni Visual Tingkatan 3 - Game Show TV</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Cinzel:wght@700;900&family=Bungee&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            display: ['Cinzel', 'serif'],
+            tv: ['Bungee', 'cursive'],
+          },
+          colors: {
+            gold: {
+              300: '#fde047',
+              400: '#facc15',
+              500: '#eab308',
+              600: '#ca8a04',
+            },
+            studio: {
+              dark: '#08091a',
+              card: '#121533',
+              accent: '#3b82f6',
+              purple: '#7c3aed',
+              neon: '#06b6d4'
+            }
+          },
+          animation: {
+            'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'spotlight': 'spotlightMove 8s ease-in-out infinite alternate',
+            'float': 'floating 3s ease-in-out infinite',
+          },
+          keyframes: {
+            spotlightMove: {
+              '0%': { transform: 'rotate(-25deg) scale(1)' },
+              '100%': { transform: 'rotate(25deg) scale(1.1)' }
+            },
+            floating: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #08091a;
+      color: #f8fafc;
+      overflow-x: hidden;
+      user-select: none;
+    }
+    .tv-stage-bg {
+      background: radial-gradient(circle at 50% 20%, rgba(59, 130, 246, 0.25) 0%, rgba(124, 58, 237, 0.15) 45%, rgba(8, 9, 26, 0.95) 90%),
+                  radial-gradient(ellipse at bottom, #171d47 0%, #08091a 80%);
+    }
+    .neon-border {
+      box-shadow: 0 0 15px rgba(234, 179, 8, 0.4), inset 0 0 15px rgba(234, 179, 8, 0.2);
+    }
+    .neon-blue {
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);
+    }
+    .glass-card {
+      background: rgba(18, 21, 51, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-stage {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-stage:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.02);
+      filter: brightness(1.15);
+    }
+    .btn-stage:active:not(:disabled) {
+      transform: translateY(1px) scale(0.98);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  </style>
+</head>
+<body class="tv-stage-bg min-h-screen flex flex-col font-sans relative selection:bg-amber-500 selection:text-black">
+
+<div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+  <div class="absolute -top-32 left-1/4 w-96 h-[600px] bg-gradient-to-b from-blue-500/20 via-cyan-400/5 to-transparent blur-3xl transform -rotate-12 animate-spotlight origin-top"></div>
+  <div class="absolute -top-32 right-1/4 w-96 h-[600px] bg-gradient-to-b from-purple-500/20 via-amber-400/5 to-transparent blur-3xl transform rotate-12 animate-spotlight origin-top" style="animation-delay: -4s;"></div>
+  <div class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-studio-dark to-transparent"></div>
+</div>
+
+<header class="relative z-10 w-full glass-card border-b border-yellow-500/30 px-4 py-3 shadow-2xl">
+  <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-amber-500/40 text-xl font-tv">
+        <i class="fa-solid fa-trophy"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="inline-block px-2 py-0.5 text-[10px] font-black uppercase tracking-widest bg-red-600 text-white rounded-full animate-pulse">● LIVE ON AIR</span>
+          <span class="text-xs text-yellow-400 font-semibold tracking-wider">KSSM TINGKATAN 3</span>
+        </div>
+        <h1 class="text-xl md:text-2xl font-black font-display tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-500 drop-shadow">
+          PENTAS JUARA SENI VISUAL
+        </h1>
+      </div>
+    </div>
+
+    <!-- Live Status Indicators in Header -->
+    <div class="flex items-center gap-4">
+      <div id="playerBadge" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs">
+        <i class="fa-solid fa-user-astronaut text-cyan-400"></i>
+        <span id="playerDisplay" class="font-bold text-gray-200">Peserta: -</span>
+      </div>
+
+      <div class="flex items-center gap-2 bg-black/40 px-3.5 py-1.5 rounded-xl border border-yellow-500/40 shadow-inner">
+        <i class="fa-solid fa-coins text-yellow-400 text-base"></i>
+        <span class="text-xs text-gray-400 font-medium">MATA:</span>
+        <span id="scoreDisplay" class="text-xl font-black text-yellow-400 font-tv tracking-wider">0</span>
+      </div>
+
+      <button id="audioToggleBtn" onclick="toggleAudio()" class="w-9 h-9 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-white/10 flex items-center justify-center text-yellow-400 text-sm transition" title="Pasang/Senyapkan Audio">
+        <i id="audioIcon" class="fa-solid fa-volume-high"></i>
+      </button>
+
+      <button onclick="openConfigModal()" class="w-9 h-9 rounded-lg bg-indigo-900/60 hover:bg-indigo-800 border border-indigo-400/40 flex items-center justify-center text-indigo-200 text-sm transition" title="Tetapan Guru (Google Sheet)">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="relative z-10 flex-1 max-w-6xl w-full mx-auto p-4 md:p-6 flex flex-col justify-center">
+
+  <!-- ==================== VIEW 1: REGISTRATION / HOME ==================== -->
+  <section id="viewWelcome" class="w-full max-w-3xl mx-auto glass-card rounded-3xl p-6 md:p-10 border border-yellow-500/30 neon-border animate-float">
+    <div class="text-center space-y-4 mb-8">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 to-purple-500/20 border border-yellow-400/30 text-yellow-300 text-xs font-bold tracking-widest uppercase">
+        <i class="fa-solid fa-microphone-lines"></i> TV Studio Game Show Pentas Seni
+      </div>
+      <h2 class="text-3xl md:text-5xl font-black font-display tracking-tight text-white leading-tight">
+        SELAMAT DATANG KE <br>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-amber-600">PENTAS JUARA SENI</span>
+      </h2>
+      <p class="text-gray-300 text-sm md:text-base max-w-xl mx-auto">
+        Uji ketajaman minda anda dalam 5 Bidang Pendidikan Seni Visual Tingkatan 3 KSSM merentasi 3 Pusingan Pentas TV yang penuh debaran!
+      </p>
+    </div>
+
+    <!-- Quick Preview Grid of 5 Modules -->
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mb-8 text-center text-xs">
+      <div class="p-2.5 rounded-xl bg-blue-950/40 border border-blue-500/20">
+        <i class="fa-solid fa-shirt text-blue-400 text-lg mb-1 block"></i>
+        <div class="font-bold text-gray-200">1. Sejarah & Pakaian</div>
+      </div>
+      <div class="p-2.5 rounded-xl bg-purple-950/40 border border-purple-500/20">
+        <i class="fa-solid fa-palette text-purple-400 text-lg mb-1 block"></i>
+        <div class="font-bold text-gray-200">2. Seni Halus</div>
+      </div>
+      <div class="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/20">
+        <i class="fa-solid fa-compass-drafting text-emerald-400 text-lg mb-1 block"></i>
+        <div class="font-bold text-gray-200">3. Reka Bentuk</div>
+      </div>
+      <div class="p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/20">
+        <i class="fa-solid fa-rug text-amber-400 text-lg mb-1 block"></i>
+        <div class="font-bold text-gray-200">4. Seni Kraf</div>
+      </div>
+      <div class="col-span-2 sm:col-span-1 p-2.5 rounded-xl bg-rose-950/40 border border-rose-500/20">
+        <i class="fa-solid fa-camera-retro text-rose-400 text-lg mb-1 block"></i>
+        <div class="font-bold text-gray-200">5. Komunikasi Visual</div>
+      </div>
+    </div>
+
+    <!-- Student Info Form -->
+    <div class="bg-black/40 p-6 rounded-2xl border border-white/10 space-y-4">
+      <h3 class="text-sm font-bold text-yellow-400 tracking-wider flex items-center gap-2">
+        <i class="fa-solid fa-id-card"></i> DAFTAR MAKLUMAT PESERTA PENTAS
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs text-gray-300 font-semibold mb-1">Nama Penuh Murid:</label>
+          <input type="text" id="inputStudentName" placeholder="Contoh: Muhammad Adam / Siti Nur" class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 text-sm">
+        </div>
+        <div>
+          <label class="block text-xs text-gray-300 font-semibold mb-1">Tingkatan / Kelas:</label>
+          <input type="text" id="inputStudentClass" placeholder="Contoh: 3 Cemerlang / 3 Ibnu Sina" class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 text-sm">
+        </div>
+      </div>
+      <p id="regError" class="text-red-400 text-xs hidden flex items-center gap-1 font-semibold">
+        <i class="fa-solid fa-triangle-exclamation"></i> Sila isi Nama dan Kelas anda terlebih dahulu!
+      </p>
+
+      <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="text-xs text-gray-400 flex items-center gap-2">
+          <i class="fa-solid fa-book-open-reader text-yellow-400 text-base"></i>
+          <span>Syarat Pentas: Wajib semak Nota Ulang Kaji 5 Bidang sebelum memulakan kuiz.</span>
+        </div>
+        <button onclick="goToStudyNotes()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 text-black font-extrabold text-sm font-tv tracking-wider shadow-lg shadow-amber-500/30 btn-stage flex items-center justify-center gap-2">
+          <span>BUKA NOTA & PERSEDIAAN</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== VIEW 2: STUDY NOTES (MANDATORY MODULE) ==================== -->
+  <section id="viewNotes" class="hidden w-full glass-card rounded-3xl p-6 md:p-8 border border-blue-500/30 shadow-2xl">
+    <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div>
+        <div class="flex items-center gap-2 text-xs font-bold text-cyan-400 uppercase tracking-widest">
+          <i class="fa-solid fa-book-bookmark"></i> Bilik Persediaan Peserta Studio
+        </div>
+        <h2 class="text-2xl md:text-3xl font-black font-display text-white">
+          NOTA ULANG KAJI PENDIDIKAN SENI VISUAL TINGKATAN 3
+        </h2>
+        <p class="text-xs md:text-sm text-gray-300">
+          Sila baca dan teliti ringkasan 5 Bidang ini. Anda boleh menguji kefahaman sebaik sahaja selesai membaca.
+        </p>
+      </div>
+      <div class="flex items-center gap-2 bg-blue-950/60 border border-blue-400/40 px-4 py-2 rounded-xl text-xs text-blue-200">
+        <i class="fa-solid fa-clock-rotate-left text-yellow-400"></i>
+        <span id="readTimeTracker">Status: Membaca Nota...</span>
+      </div>
+    </div>
+
+    <!-- Notes Tabs -->
+    <div class="flex gap-2 overflow-x-auto py-4 custom-scroll border-b border-white/5">
+      <button onclick="switchNoteTab('tab1')" id="tabBtn1" class="note-tab-btn px-4 py-2 rounded-xl bg-yellow-400 text-black font-bold text-xs whitespace-nowrap transition flex items-center gap-2">
+        <i class="fa-solid fa-shirt"></i> 1. Pakaian & Hiasan Diri
+      </button>
+      <button onclick="switchNoteTab('tab2')" id="tabBtn2" class="note-tab-btn px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-bold text-xs whitespace-nowrap transition flex items-center gap-2">
+        <i class="fa-solid fa-palette"></i> 2. Seni Halus
+      </button>
+      <button onclick="switchNoteTab('tab3')" id="tabBtn3" class="note-tab-btn px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-bold text-xs whitespace-nowrap transition flex items-center gap-2">
+        <i class="fa-solid fa-compass-drafting"></i> 3. Reka Bentuk
+      </button>
+      <button onclick="switchNoteTab('tab4')" id="tabBtn4" class="note-tab-btn px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-bold text-xs whitespace-nowrap transition flex items-center gap-2">
+        <i class="fa-solid fa-rug"></i> 4. Seni Kraf
+      </button>
+      <button onclick="switchNoteTab('tab5')" id="tabBtn5" class="note-tab-btn px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-bold text-xs whitespace-nowrap transition flex items-center gap-2">
+        <i class="fa-solid fa-camera-retro"></i> 5. Komunikasi Visual
+      </button>
+    </div>
+
+    <!-- Notes Content Area -->
+    <div class="py-6 max-h-[50vh] overflow-y-auto custom-scroll pr-2">
+      <!-- Note Tab 1 -->
+      <div id="tabContent1" class="note-tab-content space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-black/30 p-4 rounded-2xl border border-white/10">
+            <h4 class="text-sm font-bold text-yellow-400 mb-2 flex items-center gap-2">
+              <i class="fa-solid fa-user-tie"></i> Pakaian Mengikut Kaum
+            </h4>
+            <ul class="text-xs text-gray-300 space-y-1.5 list-disc pl-4">
+              <li><strong>Melayu:</strong> Baju Melayu Cekak Musang (5 butang) / Teluk Belanga (1 butang), Baju Kurung Teluk Belanga, Baju Kebaya. Tokoh pemuliharaan: Munirah Ruffey & Sharifah Azah Aziz.</li>
+              <li><strong>Cina:</strong> Cheongsam (leher tinggi, belah tepi), Samfoo, Ceongsam Tradisional sutera.</li>
+              <li><strong>India:</strong> Sari (dililit kemas dengan Choli), Doti (kain putih lelaki), Kurta.</li>
+              <li><strong>Iban:</strong> Kelambi, Sirat, Kain Bidang bertemankan perhiasan perak.</li>
+              <li><strong>Kadazan:</strong> Sia dan Souva, dihiasi renda emas (Siga ialah tanjak lelaki).</li>
+            </ul>
+          </div>
+          <div class="bg-black/30 p-4 rounded-2xl border border-white/10">
+            <h4 class="text-sm font-bold text-yellow-400 mb-2 flex items-center gap-2">
+              <i class="fa-solid fa-gem"></i> Perhiasan Diri & Motif
+            </h4>
+            <ul class="text-xs text-gray-300 space-y-1.5 list-disc pl-4">
+              <li><strong>Kepala:</strong> Cucuk sanggul, Gandik (pemeles dahi), Dokoh (rantai bertingkat di dada), Pending (kepala tali pinggang).</li>
+              <li><strong>Perhiasan Kaum Borneo:</strong> Tali pinggang syiling perak (Lampit), Hiasan kepala perak Iban (Sugu Tinggi).</li>
+              <li><strong>Motif Utama:</strong> Flora (pucuk rebung, bunga lawang, tampuk manggis) & Geometri melambangkan kesopanan, darjat, dan identiti budaya.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Note Tab 2 -->
+      <div id="tabContent2" class="note-tab-content hidden space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-black/30 p-4 rounded-2xl border border-white/10">
+            <h4 class="text-sm font-bold text-purple-400 mb-2">Seni Lukisan</h4>
+            <p class="text-xs text-gray-300 mb-2">Media kering (pensel, arang, pen, pastel).</p>
+            <ul class="text-xs text-gray-300 space-y-1 list-disc pl-4">
+              <li><strong>Teknik:</strong> Cross-hatching (garis silang), Hatching (garisan selari), Stippling/Titik, Contouring.</li>
+              <li><strong>Pelukis:</strong> Tokoh awal Gua Tambun hingga era moden (Dzulkifli Buyong, Jalaini Abu Hassan).</li>
+            </ul>
+          </div>
+          <div class="bg-black/30 p-4 rounded-2xl border border-white/10">
+            <h4 class="text-sm font-bold text-purple-400 mb-2">Seni Catan</h4>
+            <p class="text-xs text-gray-300 mb-2">Media basah atas permukaan 2D.</p>
+            <ul class="text-xs text-gray-300 space-y-1 list-disc pl-4">
+              <li><strong>Media:</strong> Cat air (lut sinar), Akrilik (cepat kering, berasaskan air), Cat Minyak (legap, lambat kering), Guaj (legap larut air).</li>
+              <li><strong>Teknik Cat Air:</strong> Basah atas basah, Basah atas kering, Kering atas basah, Kering atas kering.</li>
+            </ul>
+          </div>
+          <div class="bg-black/30 p-4 rounded-2xl border border-white/10">
+            <h4 class="text-sm font-bold text-purple-400 mb-2">Seni Arca</h4>
+            <p class="text-xs text-gray-300 mb-2">Bentuk 3 Dimensi berstruktur.</p>
+            <ul class="text-xs text-gray-300 space-y-1 list-disc pl-4">
+              <li><strong>Jenis:</strong> Arca Estetika (nilai keindahan) & Arca Berfungsi (contoh: taman permainan, lampu hiasan).</li>
+              <li><strong>Kaedah:</strong> Manipulasi/Binaan (cantuman), Luakan (ukiran buang bahagian), Acuan (tuangan plaster/gangsa), Asemblaj.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Note Tab 3 -->
+      <div id="tabContent3" class="note-tab-content hidden space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-black/30 p-4 rounded-2xl border border-white/10">
+            <h4 class="text-sm font-bold text-emerald-400 mb-2">Reka Bentuk Landskap</h4>
+            <ul class="text-xs text-gray-300 space-y-1 list-disc pl-4">
+              <li><strong>Konsep:</strong> Landskap Islam (fokus air, bayangan, geometri, ketenangan), Landskap Jepun (batu, pasir zen, buluh, jambatan), Landskap Melayu & Bali (flora tropika, tempayan).</li>
+              <li><strong>Elemen:</strong> Lembut (Softscape: tumbuhan, rumput) & Keras (Hardscape: gazebo, laluan pejalan kaki, lampu).</li>
+              <li><strong>Pelan:</strong> Pelan tapak berskala dengan simbol piawai seni bina landskap.</li>
+            </ul>
+          </div>
+          <div class="bg-black/30 p-4 rounded-2xl border border-white/10">
+            <h4 class="text-sm font-bold text-emerald-400 mb-2">Reka Bentuk Hiasan Dalaman</h4>
+            <ul class="text-xs text-gray-300 space-y-1 list-disc pl-4">
+              <li><strong>Peranan:</strong> Mengoptimumkan fungsi ruang, keselesaan, ergonomik, dan pencahayaan.</li>
+              <li><strong>Elemen:</strong> Ruang, garisan, bentuk, pencahayaan semula jadi/buatan, warna, dan jalinan.</li>
+              <li><strong>Lukisan:</strong> Pelan lantai (Floor plan), lukisan perspektif (1 titik & 2 titik lenyap).</li>
+            </ul>
+          </div>
+          <div class="bg-black/30 p-4 rounded-2xl border border-white/10">
+            <h4 class="text-sm font-bold text-emerald-400 mb-2">Reka Bentuk Industri</h4>
+            <ul class="text-xs text-gray-300 space-y-1 list-disc pl-4">
+              <li><strong>Bidang Utama:</strong> Reka bentuk produk komersial, perabot (ergonomik), dan pengangkutan/automotif.</li>
+              <li><strong>Evolusi:</strong> Dari lakaran idea, prototaip tanah liat/skala kecil, hingga permodelan 3D berbantukan komputer (CAD).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Note Tab 4 -->
+      <div id="tabContent4" class="note-tab-content hidden space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-black/30 p-4 rounded-2xl border border-white/10">
+            <h4 class="text-sm font-bold text-amber-400 mb-2">Seni Tekat (Sulam Benang Emas)</h4>
+            <ul class="text-xs text-gray-300 space-y-1.5 list-disc pl-4">
+              <li><strong>Jenis:</strong> Tekat Timbul Benang Emas dan Tekat Gubah. Terkenal di Perak (Kuala Kangsar).</li>
+              <li><strong>Alatan & Bahan:</strong>
+                <br>• <em>Cuban:</em> Kayu bercabang untuk melilit benang emas.
+                <br>• <em>Mempulur:</em> Kad tebal dipotong mengikut motif sebagai acuan timbul.
+                <br>• <em>Pemidang:</em> Meregangkan kain baldu dasar.
+              </li>
+              <li><strong>Motif:</strong> Flora seperti daun paku, bunga asam batu, dan motif geometri.</li>
+            </ul>
+          </div>
+          <div class="bg-black/30 p-4 rounded-2xl border border-white/10">
+            <h4 class="text-sm font-bold text-amber-400 mb-2">Seni Anyaman</h4>
+            <ul class="text-xs text-gray-300 space-y-1.5 list-disc pl-4">
+              <li><strong>Bahan Asli:</strong> Daun mengkuang (kasar, tikar), daun pandan (halus, wangi), rotan, buluh.</li>
+              <li><strong>Proses Penyediaan:</strong> Menetak daun -> Melayur di atas api -> Menjangka (menghiris jalur) -> Menitik -> Merendam -> Menjemur -> Mewarna.</li>
+              <li><strong>Langkah Anyaman:</strong> Lagang (tulang asas mulakan anyaman) -> Menganyam badan -> Pepeh (penamat tepi) -> Sisip (mengemaskan lebihan daun).</li>
+              <li><strong>Corak Kelarai:</strong> Kelarai mata ketitir, beras patah, bunga cengkih, tampuk manggis.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Note Tab 5 -->
+      <div id="tabContent5" class="note-tab-content hidden space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-black/30 p-4 rounded-2xl border border-white/10">
+            <h4 class="text-sm font-bold text-rose-400 mb-2">Seni Reka Grafik (Tipografi)</h4>
+            <ul class="text-xs text-gray-300 space-y-1.5 list-disc pl-4">
+              <li><strong>Definisi:</strong> Seni memilih, menyusun, dan mereka bentuk huruf/teks agar mesej jelas dan menarik.</li>
+              <li><strong>Klasifikasi Fon:</strong>
+                <br>• <em>Serif:</em> Ada garis unjuran di hujung huruf (Times New Roman) - klasik & formal.
+                <br>• <em>Sans Serif:</em> Tanpa unjuran (Arial, Helvetica) - moden & bersih.
+                <br>• <em>Skrip/Script:</em> Menyerupai tulisan tangan bersambung.
+                <br>• <em>Dekoratif:</em> Hiasan khas tema grafik.
+              </li>
+              <li><strong>Anatomi:</strong> Baseline, Mean line, Cap height, Ascender (unjuran atas), Descender (unjuran bawah seperti huruf 'g', 'p').</li>
+            </ul>
+          </div>
+          <div class="bg-black/30 p-4 rounded-2xl border border-white/10">
+            <h4 class="text-sm font-bold text-rose-400 mb-2">Seni Foto (Kamera & Peranti Pengimejan)</h4>
+            <ul class="text-xs text-gray-300 space-y-1.5 list-disc pl-4">
+              <li><strong>Jenis Kamera:</strong> DSLR, Mirrorless, Kamera Kompak, Telefon Pintar.</li>
+              <li><strong>Komponen & Tetapan Dedahan Segi Tiga (Exposure Triangle):</strong>
+                <br>• <em>Aperture (Bukaan f-stop):</em> Kawal kemasukan cahaya & kedalaman medan (Depth of Field/Bokeh).
+                <br>• <em>Shutter Speed:</em> Kelajuan tirai sensor (pembekuan aksi laju vs motion blur).
+                <br>• <em>ISO:</em> Sensitiviti sensor cahaya terhadap pendedahan (ISO tinggi = risiko noise/grain).
+              </li>
+              <li><strong>Komposisi:</strong> Rule of Thirds (Petua Pertigaan), Leading Lines (Garis Penunjuk), Framing.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Checklist to Start Quiz -->
+    <div class="pt-4 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
+      <label class="flex items-center gap-3 cursor-pointer text-sm text-gray-300">
+        <input type="checkbox" id="checkReadDone" onchange="toggleStartQuizButton()" class="w-5 h-5 rounded accent-yellow-400 focus:ring-yellow-400">
+        <span>Saya telah selesai membaca nota dan bersedia untuk berentap di Pentas Juara!</span>
+      </label>
+      <button id="btnStartGame" disabled onclick="initGameSession()" class="w-full md:w-auto px-8 py-3.5 rounded-xl bg-gray-600 text-gray-400 font-extrabold text-sm font-tv tracking-wider cursor-not-allowed transition duration-200 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-play"></i> MASUK KE PENTAS TV SEKARANG
+      </button>
+    </div>
+  </section>
+
+  <!-- ==================== VIEW 3: GAME SHOW ARENA ==================== -->
+  <section id="viewGame" class="hidden w-full flex flex-col gap-5">
+    
+    <!-- Top Stage Header: Round Banner, Timer & Lifelines -->
+    <div class="glass-card rounded-2xl p-4 border border-yellow-500/30 flex flex-wrap items-center justify-between gap-3 shadow-xl">
+      <!-- Round Info -->
+      <div class="flex items-center gap-3">
+        <div id="roundBadge" class="px-3.5 py-1.5 rounded-xl font-tv text-xs bg-gradient-to-r from-red-600 to-rose-700 text-white shadow-md">
+          PUSINGAN 1
+        </div>
+        <div>
+          <h3 id="roundTitle" class="text-sm md:text-base font-bold text-white leading-tight">Soalan Cepat Tepat</h3>
+          <p id="roundRuleDesc" class="text-[11px] text-gray-300">Jawab pantas sebelum masa tamat untuk mata penuh!</p>
+        </div>
+      </div>
+
+      <!-- Live Lifelines (50:50 & Host Hint) -->
+      <div class="flex items-center gap-2">
+        <button id="btnLife5050" onclick="useLifeline5050()" class="btn-stage flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600 text-white text-xs font-bold shadow-md border border-cyan-400/30">
+          <i class="fa-solid fa-percent"></i> <span>50:50</span>
+        </button>
+        <button id="btnLifeHint" onclick="useLifelineHint()" class="btn-stage flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-black text-xs font-bold shadow-md border border-yellow-400/40">
+          <i class="fa-solid fa-lightbulb"></i> <span>PETUNJUK HOS</span>
+        </button>
+      </div>
+
+      <!-- Countdown Timer & Progress Gauge -->
+      <div class="flex items-center gap-3 ml-auto">
+        <div class="relative w-12 h-12 flex items-center justify-center">
+          <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+            <path class="text-slate-700" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path id="timerCircle" class="text-yellow-400 transition-all duration-1000 ease-linear" stroke-dasharray="100, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+          </svg>
+          <span id="timerText" class="absolute font-tv text-sm font-bold text-white">15</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main TV Stage Screen & Question Card -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-5">
+      
+      <!-- Center Main Question Area (3 Cols) -->
+      <div class="lg:col-span-3 space-y-4">
+        <div class="glass-card rounded-3xl p-6 md:p-8 border border-yellow-500/40 neon-border relative overflow-hidden">
+          
+          <!-- Spotlight Accent on question card -->
+          <div class="absolute -top-10 -right-10 w-40 h-40 bg-yellow-400/10 rounded-full blur-2xl pointer-events-none"></div>
+
+          <!-- Question Meta: Topic, Round Indicator & Difficulty -->
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4 text-xs font-semibold">
+            <span id="topicTag" class="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 flex items-center gap-1.5">
+              <i class="fa-solid fa-layer-group"></i> <span>Bidang: Seni Halus</span>
+            </span>
+            <div class="flex items-center gap-2">
+              <span id="questionStepBadge" class="text-gray-300 font-mono">Soalan 1 / 15</span>
+              <span id="pointValueBadge" class="px-2.5 py-0.5 rounded-md bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 font-tv text-[11px]">+100 MATA</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Illustrated Stage Graphic (SVG Graphics) -->
+          <div id="stageVisualGraphic" class="w-full h-36 md:h-44 rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border border-white/10 flex items-center justify-center p-3 mb-6 relative overflow-hidden shadow-inner">
+            <!-- Dynamic SVG injected here -->
+          </div>
+
+          <!-- Question Text -->
+          <h2 id="questionText" class="text-lg md:text-2xl font-bold text-white leading-relaxed text-center min-h-[60px] flex items-center justify-center px-2">
+            Memuatkan soalan cabaran pentas...
+          </h2>
+
+          <!-- Host Dialogue Bubble (Appears on Lifeline or feedback) -->
+          <div id="hostBubble" class="hidden mt-4 p-3 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-200 text-xs flex items-center gap-3 animate-pulse">
+            <div class="w-8 h-8 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-sm font-black shrink-0">
+              <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <div>
+              <span class="font-bold block text-yellow-300">PETUNJUK HOS TV:</span>
+              <span id="hostBubbleText">-</span>
+            </div>
+          </div>
+
+          <!-- 4 Answer Options (TV Studio Podium Buttons) -->
+          <div id="optionsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 mt-6">
+            <!-- Buttons dynamically generated -->
+          </div>
+        </div>
+
+        <!-- Feedback & Next Stage Navigation -->
+        <div id="feedbackCard" class="hidden glass-card rounded-2xl p-4 border border-white/10 flex items-center justify-between gap-4 animate-bounce-short">
+          <div class="flex items-center gap-3">
+            <div id="feedbackIcon" class="w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0">
+              <!-- Check or Cross Icon -->
+            </div>
+            <div>
+              <h4 id="feedbackTitle" class="text-sm font-bold text-white">Tepat Sekali!</h4>
+              <p id="feedbackRationale" class="text-xs text-gray-300">Penerangan jawapan akan dipaparkan di sini.</p>
+            </div>
+          </div>
+          <button id="btnNextQuestion" onclick="goToNextQuestion()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-black font-black text-xs font-tv tracking-wider shadow-md shrink-0 btn-stage flex items-center gap-2">
+            <span>SETERUSNYA</span>
+            <i class="fa-solid fa-forward-step"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Column: Studio Progress Ladder / Round Leaderboard (1 Col) -->
+      <div class="glass-card rounded-3xl p-5 border border-white/10 flex flex-col justify-between space-y-4">
+        <div>
+          <div class="flex items-center gap-2 pb-3 border-b border-white/10 mb-3 text-xs font-bold text-yellow-400 uppercase tracking-widest">
+            <i class="fa-solid fa-chart-line"></i> Tangga Cabaran
+          </div>
+          <p class="text-[11px] text-gray-400 mb-3">Lalui 3 pusingan utama TV untuk merebut mahkota kejuaraan:</p>
+          
+          <div class="space-y-2" id="roundProgressLadder">
+            <!-- Round 1 Item -->
+            <div id="ladderRound1" class="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-md bg-blue-600/60 text-white font-black flex items-center justify-center text-[10px]">P1</span>
+                <div>
+                  <div class="font-bold text-gray-200">Cepat Tepat</div>
+                  <div class="text-[10px] text-gray-400">5 Soalan (100 mata)</div>
+                </div>
+              </div>
+              <span id="ladderBadge1" class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300">Aktif</span>
+            </div>
+
+            <!-- Round 2 Item -->
+            <div id="ladderRound2" class="p-2.5 rounded-xl bg-white/5 border border-white/5 opacity-60 flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-md bg-purple-600/60 text-white font-black flex items-center justify-center text-[10px]">P2</span>
+                <div>
+                  <div class="font-bold text-gray-200">Mata Berganda</div>
+                  <div class="text-[10px] text-gray-400">5 Soalan (×2 mata!)</div>
+                </div>
+              </div>
+              <span id="ladderBadge2" class="text-[10px] px-2 py-0.5 rounded bg-gray-500/20 text-gray-400">Kunci</span>
+            </div>
+
+            <!-- Round 3 Item -->
+            <div id="ladderRound3" class="p-2.5 rounded-xl bg-white/5 border border-white/5 opacity-60 flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-md bg-amber-500/60 text-white font-black flex items-center justify-center text-[10px]">P3</span>
+                <div>
+                  <div class="font-bold text-gray-200">Cabaran Jutawan</div>
+                  <div class="text-[10px] text-gray-400">5 Soalan Berprestij</div>
+                </div>
+              </div>
+              <span id="ladderBadge3" class="text-[10px] px-2 py-0.5 rounded bg-gray-500/20 text-gray-400">Kunci</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Studio Statistics Card -->
+        <div class="bg-black/40 p-3.5 rounded-2xl border border-white/10 space-y-2">
+          <div class="text-[11px] text-gray-400 uppercase font-semibold">Statistik Semasa:</div>
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-300">Betul:</span>
+            <span id="statCorrect" class="font-bold text-emerald-400">0</span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-300">Salah / Masa Tamat:</span>
+            <span id="statWrong" class="font-bold text-rose-400">0</span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-300">Ketepatan:</span>
+            <span id="statAccuracy" class="font-bold text-yellow-400">0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== VIEW 4: PODIUM RESULTS & GOOGLE SHEET SUBMIT ==================== -->
+  <section id="viewResults" class="hidden w-full max-w-4xl mx-auto glass-card rounded-3xl p-6 md:p-10 border border-yellow-500/50 neon-border shadow-2xl">
+    <div class="text-center space-y-3 mb-8">
+      <div class="inline-block p-4 rounded-full bg-gradient-to-tr from-yellow-500 to-amber-300 text-slate-950 text-4xl shadow-lg shadow-amber-500/50 animate-bounce">
+        <i class="fa-solid fa-award"></i>
+      </div>
+      <h2 class="text-3xl md:text-5xl font-black font-display text-white">
+        KEPUTUSAN PENTAS JUARA
+      </h2>
+      <p id="resultCelebrationMsg" class="text-amber-300 text-sm md:text-base font-semibold">
+        Tahniah atas persembahan hebat di studio hari ini!
+      </p>
+    </div>
+
+    <!-- Summary Badges Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-8 text-center">
+      <div class="bg-black/40 p-4 rounded-2xl border border-white/10">
+        <span class="text-xs text-gray-400 font-semibold block mb-1">JUMLAH MATA</span>
+        <span id="finalScore" class="text-2xl md:text-4xl font-black text-yellow-400 font-tv">0</span>
+      </div>
+      <div class="bg-black/40 p-4 rounded-2xl border border-white/10">
+        <span class="text-xs text-gray-400 font-semibold block mb-1">GRED PENTAS</span>
+        <span id="finalGrade" class="text-2xl md:text-4xl font-black text-cyan-400 font-tv">A+</span>
+      </div>
+      <div class="bg-black/40 p-4 rounded-2xl border border-white/10">
+        <span class="text-xs text-gray-400 font-semibold block mb-1">KETEPATAN</span>
+        <span id="finalAccuracy" class="text-2xl md:text-4xl font-black text-emerald-400 font-tv">100%</span>
+      </div>
+      <div class="bg-black/40 p-4 rounded-2xl border border-white/10">
+        <span class="text-xs text-gray-400 font-semibold block mb-1">SOALAN DIJAWAB</span>
+        <span id="finalAnswered" class="text-2xl md:text-4xl font-black text-purple-400 font-tv">15/15</span>
+      </div>
+    </div>
+
+    <!-- Google Sheet Submission Card -->
+    <div class="bg-gradient-to-r from-blue-950/80 to-indigo-950/80 p-6 rounded-2xl border border-blue-400/40 space-y-4 mb-6">
+      <div class="flex items-center justify-between gap-2">
+        <h3 class="text-sm md:text-base font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-cloud-arrow-up text-cyan-400 text-lg"></i>
+          HANTAR KEPUTUSAN KEPADA GURU (GOOGLE SHEET)
+        </h3>
+        <span id="sheetStatusBadge" class="text-[11px] px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 font-semibold border border-blue-400/30">
+          Sedia Dihantar
+        </span>
+      </div>
+      <p class="text-xs text-gray-300">
+        Data nama murid, kelas, jumlah skor, ketepatan, dan tarikh masa akan dihantar terus ke pangkalan data Google Sheet guru anda secara automatik.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center gap-3">
+        <button id="btnSubmitToTeacher" onclick="submitResultToGoogleSheet()" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-xs font-tv tracking-wider shadow-lg shadow-cyan-500/30 btn-stage flex items-center justify-center gap-2">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span>HANTAR KEPUTUSAN SEKARANG</span>
+        </button>
+
+        <button onclick="copyResultSummary()" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-bold border border-white/20 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-copy"></i>
+          <span>SALIN SLIP KEPUTUSAN</span>
+        </button>
+
+        <button onclick="downloadCSVReport()" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-bold border border-white/20 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-file-csv"></i>
+          <span>EKSPORT CSV</span>
+        </button>
+      </div>
+
+      <div id="submitResultMsg" class="hidden text-xs p-3 rounded-xl"></div>
+    </div>
+
+    <!-- Play Again Buttons -->
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+      <button onclick="restartFullGame()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 text-black font-extrabold text-sm font-tv tracking-wider shadow-lg shadow-amber-500/30 btn-stage flex items-center justify-center gap-2">
+        <i class="fa-solid fa-rotate-left"></i>
+        <span>MAIN SEMULA (PUSINGAN BAHARU)</span>
+      </button>
+      <button onclick="goToStudyNotesFromResults()" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/20 transition flex items-center justify-center gap-2">
+        <i class="fa-solid fa-book-open"></i>
+        <span>ULANG KAJI NOTA SEMULA</span>
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<div id="modalConfig" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+  <div class="glass-card max-w-lg w-full rounded-3xl p-6 md:p-8 border border-indigo-500/40 shadow-2xl relative">
+    <button onclick="closeConfigModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 text-gray-300 hover:text-white flex items-center justify-center">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 rounded-xl bg-indigo-600/30 border border-indigo-400/40 flex items-center justify-center text-indigo-300">
+        <i class="fa-solid fa-gear text-lg"></i>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold text-white">Tetapan Integrasi Guru</h3>
+        <p class="text-xs text-gray-400">Sambungkan keputusan murid ke Google Sheet guru</p>
+      </div>
+    </div>
+
+    <div class="space-y-4 text-xs">
+      <div>
+        <label class="block text-gray-300 font-semibold mb-1">URL Google Apps Script Web App / Form Action:</label>
+        <input type="url" id="configSheetUrl" placeholder="https://script.google.com/macros/s/..." class="w-full px-4 py-2.5 rounded-xl bg-black/50 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-400">
+        <p class="text-[11px] text-gray-400 mt-1">Masukkan Web App URL yang menerima permohonan POST dengan JSON atau parameters.</p>
+      </div>
+
+      <div class="bg-indigo-950/40 p-3.5 rounded-xl border border-indigo-500/20 text-indigo-200">
+        <div class="font-bold mb-1 flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-info"></i> Format Data yang Dihantar:
+        </div>
+        <code>{ nama, kelas, markah, ketepatan, pusingan, tarikh }</code>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button onclick="closeConfigModal()" class="px-4 py-2 rounded-xl bg-white/10 text-gray-300 hover:text-white font-semibold">Tutup</button>
+        <button onclick="saveConfigSettings()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold">Simpan URL</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none px-4 py-3 rounded-2xl glass-card border border-white/20 text-white text-xs flex items-center gap-2 shadow-2xl">
+  <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+  <span id="toastMsg">Mesej sistem</span>
+</div>
+
+<script>
+/* =====================================================================
+   BANK SOALAN KSSM PENDIDIKAN SENI VISUAL TINGKATAN 3 (50 SOALAN)
+   Setiap satu daripada 5 bidang mempunyai 10 soalan berstandard tinggi.
+   ===================================================================== */
+
+const QUESTION_BANK = {
+  // BIDANG 1: SEJARAH & APRESIASI SENI VISUAL (10 Soalan)
+  bidang1: [
+    {
+      bidang: "1. Pakaian & Hiasan Diri",
+      subjek: "Baju Kurung Melayu",
+      svgType: "baju_melayu",
+      question: "Apakah perbezaan utama pada bahagian leher antara Baju Melayu Cekak Musang dengan Baju Melayu Teluk Belanga?",
+      options: [
+        "Cekak Musang berkolar tegak dengan 5 butang, manakala Teluk Belanga berleher bulat berbelah dengan 1 butang",
+        "Cekak Musang tidak berkolar manakala Teluk Belanga menggunakan kolar tinggi lipat",
+        "Teluk Belanga mempunyai 7 butang emas manakala Cekak Musang tiada butang",
+        "Kedua-duanya menggunakan leher bentuk V tanpa butang"
+      ],
+      correct: 0,
+      hint: "Perhatikan jahitan tulang belut pada leher bulat vs kolar bercekak tegak.",
+      rationale: "Baju Melayu Cekak Musang memiliki kolar tegak berdiri dengan lima butang, manakala Teluk Belanga berkolar leher bulat bersulam tulang belut dengan satu butang pemancing."
+    },
+    {
+      bidang: "1. Pakaian & Hiasan Diri",
+      subjek: "Tokoh Budaya Pakaian",
+      svgType: "tokoh_seni",
+      question: "Siapakah tokoh tersohor yang telah mengkaji dan membukukan khazanah Rupa & Gaya Busana Melayu?",
+      options: [
+        "Sharifah Azah Syed Mohammad Alsagoff (Azah Aziz)",
+        "Dato' Chuah Thean Teng",
+        "Anthony Lau",
+        "Syed Ahmad Jamal"
+      ],
+      correct: 0,
+      hint: "Beliau juga dikenali sebagai Mak Ungku dan ibu kepada bekas Gabenor Bank Negara.",
+      rationale: "Sharifah Azah Aziz merupakan tokoh budayawan yang sangat berjasa mendokumentasikan evolusi pakaian tradisional Melayu dan perhiasan diri."
+    },
+    {
+      bidang: "1. Pakaian & Hiasan Diri",
+      subjek: "Pakaian Tradisional India",
+      svgType: "sari_doti",
+      question: "Apakah busana tradisional wanita kaum India yang berukuran 5 hingga 6 ela kain tidak berjahit yang dililit rapi?",
+      options: [
+        "Sari dan Choli",
+        "Doti dan Kurta",
+        "Salwar Kameez",
+        "Cheongsam"
+      ],
+      correct: 0,
+      hint: "Kain ini dililit kemas pada pinggang dan disangkut di atas bahu kiri.",
+      rationale: "Sari ialah helaian kain panjang tanpa jahitan yang dipakai bersama anak baju (choli) dan kain dalam (pavada)."
+    },
+    {
+      bidang: "1. Pakaian & Hiasan Diri",
+      subjek: "Pakaian Tradisional Iban",
+      svgType: "sugu_tinggi",
+      question: "Apakah nama perhiasan kepala wanita kaum Iban yang diperbuat daripada perak berbentuk sisir melengkung tinggi?",
+      options: [
+        "Sugu Tinggi",
+        "Tali Mulung",
+        "Siga",
+        "Gandik"
+      ],
+      correct: 0,
+      hint: "Dipakai di atas kepala bersama sanggul sewaktu perayaan Hari Gawai.",
+      rationale: "Sugu Tinggi merupakan mahkota perak tradisional wanita Iban yang memancarkan keanggunan penari Kumang."
+    },
+    {
+      bidang: "1. Pakaian & Hiasan Diri",
+      subjek: "Pakaian Tradisional Kadazan",
+      svgType: "baju_kadazan",
+      question: "Bagi masyarakat Kadazandusun Papar, pakaian tradisional wanita dinamakan 'Sia'. Apakah padanan seluarnya bagi lelaki?",
+      options: [
+        "Souva",
+        "Sirat",
+        "Kurta",
+        "Samfoo"
+      ],
+      correct: 0,
+      hint: "Seluar panjang hitam dengan hiasan jalur keemasan.",
+      rationale: "Bagi lelaki Kadazandusun, baju dipanggil Souva/Sia dan seluarnya Souva dengan perhiasan renda keemasan."
+    },
+    {
+      bidang: "1. Pakaian & Hiasan Diri",
+      subjek: "Perhiasan Tradisional Melayu",
+      svgType: "dokoh",
+      question: "Apakah perhiasan dada berupa lempengan emas atau perak bertingkat tiga yang sering dipakai bersama baju kebaya?",
+      options: [
+        "Dokoh",
+        "Pending",
+        "Cucuk Sanggul",
+        "Kerongsang Thiga"
+      ],
+      correct: 0,
+      hint: "Tergantung di bahagian hadapan dada berangkai rantai leher.",
+      rationale: "Dokoh ialah hiasan leher dan dada berbentuk tiga kepingan logam bermotif flora berangkai dari kecil ke besar."
+    },
+    {
+      bidang: "1. Pakaian & Hiasan Diri",
+      subjek: "Pakaian Tradisional Cina",
+      svgType: "cheongsam",
+      question: "Pakaian wanita kaum Cina yang mempunyai leher tinggi, berbutang di tepi bahu, dan belahan di sisi paha dikenali sebagai:",
+      options: [
+        "Cheongsam (Qipao)",
+        "Samfoo",
+        "Hanfu Dinasti Tang",
+        "Baju Kebaya Nyonya"
+      ],
+      correct: 0,
+      hint: "Sangat popular dipakai ketika sambutan Tahun Baharu Cina.",
+      rationale: "Cheongsam atau Qipao mula popular di Shanghai pada 1920-an dengan potongan anggun berkolar mandarin."
+    },
+    {
+      bidang: "1. Pakaian & Hiasan Diri",
+      subjek: "Pending Melayu",
+      svgType: "pending",
+      question: "Fungsi utama 'Pending' dalam kelengkapan pakaian tradisional Melayu ialah:",
+      options: [
+        "Kepala tali pinggang berukir indah untuk mengikat samping atau kain sarung",
+        "Perhiasan dahi bagi pengantin perempuan",
+        "Pengikat lengan pakaian pahlawan",
+        "Kancing butang pada leher baju Melayu"
+      ],
+      correct: 0,
+      hint: "Diperbuat daripada logam emas atau perak berukir motif awan larat.",
+      rationale: "Pending berfungsi sebagai kepala tali pinggang berukiran halus untuk mengetatkan kain samping atau sarung."
+    },
+    {
+      bidang: "1. Pakaian & Hiasan Diri",
+      subjek: "Kain Sirat Kaum Iban",
+      svgType: "kain_sirat",
+      question: "Pakaian tradisional lelaki kaum Iban yang diperbuat daripada kain cawat panjang berhias anyaman di hujungnya dikenali sebagai:",
+      options: [
+        "Sirat",
+        "Kelambi",
+        "Doti",
+        "Kain Bidang"
+      ],
+      correct: 0,
+      hint: "Dipakai melilit pinggang dan celah paha dengan hujung terjuntai.",
+      rationale: "Sirat ialah cawat tenun tradisional lelaki Iban yang dipakai bersama jaket kelambi."
+    },
+    {
+      bidang: "1. Pakaian & Hiasan Diri",
+      subjek: "Motif Hiasan Pakaian",
+      svgType: "motif_flora",
+      question: "Antara motif flora yang paling popular digunakan pada sulaman pakaian tradisional dan pending ialah:",
+      options: [
+        "Bunga tanjung, pucuk rebung, dan tampuk manggis",
+        "Batu bata dan geometri kubus",
+        "Roda kereta dan jentera",
+        "Bulan bintang jata negeri sahaja"
+      ],
+      correct: 0,
+      hint: "Mengambil ilham daripada flora dan alam semula jadi nusantara.",
+      rationale: "Motif Melayu kaya dengan unsur alam seperti pucuk rebung, bunga lawang, dan tampuk manggis yang melambangkan falsafah budi pekerti."
+    }
+  ],
+
+  // BIDANG 2: SENI HALUS (10 Soalan)
+  bidang2: [
+    {
+      bidang: "2. Seni Halus",
+      subjek: "Teknik Seni Lukisan",
+      svgType: "cross_hatching",
+      question: "Teknik lukisan media kering yang menghasilkan ton gelap cerah melalui jalinan garisan bersilang dinamakan:",
+      options: [
+        "Cross-hatching (Garis bersilang)",
+        "Stippling (Titik)",
+        "Scumbling",
+        "Hatching sehala"
+      ],
+      correct: 0,
+      hint: "Garisan bertindih secara bersudut silang untuk memperdalam bayang.",
+      rationale: "Cross-hatching membina nilai ton dan ilusi bayangan tiga dimensi menggunakan garisan yang saling bertindih."
+    },
+    {
+      bidang: "2. Seni Halus",
+      subjek: "Sejarah Lukisan Tempatan",
+      svgType: "lukisan_gua",
+      question: "Kesan peninggalan seni lukisan terawal di Malaysia yang menggunakan hematit merah melukis figura manusia purba ditemui di:",
+      options: [
+        "Gua Tambun, Perak dan Gua Niah, Sarawak",
+        "Kota A Famosa, Melaka",
+        "Lembah Bujang, Kedah",
+        "Gua Kelam, Perlis"
+      ],
+      correct: 0,
+      hint: "Gua batu kapur yang menyimpan lukisan zaman Neolitik.",
+      rationale: "Gua Tambun dan Gua Niah menyimpan lukisan gua purba bersejarah tinggi yang menggambarkan aktiviti perburuan dan kehidupan awal."
+    },
+    {
+      bidang: "2. Seni Halus",
+      subjek: "Media Seni Catan",
+      svgType: "catan_media",
+      question: "Apakah media catan yang mempunyai sifat legap, cepat kering, dan boleh dibancuh menggunakan air?",
+      options: [
+        "Cat Akrilik",
+        "Cat Minyak",
+        "Cat Air (lut sinar)",
+        "Krayon lilin"
+      ],
+      correct: 0,
+      hint: "Menggunakan pengikat polimer sintetik.",
+      rationale: "Cat akrilik berasaskan air, bersifat legap berpigmen pekat dan mengering dengan pantas berbanding cat minyak."
+    },
+    {
+      bidang: "2. Seni Halus",
+      subjek: "Teknik Cat Air",
+      svgType: "wet_on_wet",
+      question: "Teknik menyapu warna basah ke atas permukaan kertas lukisan yang telah dibasahi air terlebih dahulu dipanggil:",
+      options: [
+        "Teknik Basah atas Basah",
+        "Teknik Kering atas Kering",
+        "Teknik Impasto",
+        "Teknik Hard-edge"
+      ],
+      correct: 0,
+      hint: "Menghasilkan kesan serakan warna kabur dan spontan yang lembut.",
+      rationale: "Basah atas basah (wet-on-wet) membenarkan pigmen warna mengalir bebas dan bergabung secara lembut di atas kertas basah."
+    },
+    {
+      bidang: "2. Seni Halus",
+      subjek: "Media Cat Minyak",
+      svgType: "oil_palette",
+      question: "Bahan apakah yang digunakan sebagai pelarut dan pencair bagi media cat minyak tradisional?",
+      options: [
+        "Minyak linsid (Linseed oil) dan Turpentin",
+        "Air suling",
+        "Alkohol isopropil",
+        "Minyak kelapa sawit"
+      ],
+      correct: 0,
+      hint: "Memerlukan turpentin untuk membersihkan berus cat.",
+      rationale: "Cat minyak menggunakan minyak linsid sebagai bahantara (medium) dan turpentin untuk mencairkan serta membersihkan alatan."
+    },
+    {
+      bidang: "2. Seni Halus",
+      subjek: "Klasifikasi Seni Arca",
+      svgType: "arca_jenis",
+      question: "Arca yang dicipta semata-mata untuk dihayati keindahan nilai estetiknya tanpa fungsi kegunaan praktikal dinamakan:",
+      options: [
+        "Arca Estetika",
+        "Arca Berfungsi",
+        "Arca Mobail",
+        "Arca Dinding"
+      ],
+      correct: 0,
+      hint: "Hanya dinikmati dari sudut visual dan penghayatan makna.",
+      rationale: "Arca estetika memfokuskan ekspresi emosi dan nilai tampak semata-mata, berbeza dengan arca berfungsi seperti kerusi taman atau lampu hiasan."
+    },
+    {
+      bidang: "2. Seni Halus",
+      subjek: "Kaedah Penghasilan Arca",
+      svgType: "arca_luakan",
+      question: "Kaedah membuang atau mengikis bahagian bahan seperti bongkah kayu, batu marmar atau sabun untuk membentuk arca dikenali sebagai:",
+      options: [
+        "Kaedah Luakan",
+        "Kaedah Binaan / Tambahan",
+        "Kaedah Acuan",
+        "Kaedah Asemblaj"
+      ],
+      correct: 0,
+      hint: "Proses 'carving' atau mengukir keluar bahan lebihan.",
+      rationale: "Kaedah luakan (subtractive/carving) menghasilkan bentuk dengan mengurangkan atau membuang bahagian bongkah secara terkawal."
+    },
+    {
+      bidang: "2. Seni Halus",
+      subjek: "Arca Mobail",
+      svgType: "arca_mobail",
+      question: "Apakah ciri utama bagi jenis Arca Mobail (Mobile Sculpture)?",
+      options: [
+        "Tergantung dan boleh bergerak-gerak apabila ditiup angin",
+        "Diukir tebal melekat kukuh pada dinding batu",
+        "Berfungsi sebagai air pancut taman",
+        "Mempunyai berat yang tidak boleh dialihkan"
+      ],
+      correct: 0,
+      hint: "Dipopularkan di peringkat antarabangsa oleh Alexander Calder.",
+      rationale: "Arca mobail merupakan arca kinetik yang digantung seimbang dan bergerak secara dinamik mengikut arus angin."
+    },
+    {
+      bidang: "2. Seni Halus",
+      subjek: "Teknik Titik (Stippling)",
+      svgType: "stippling",
+      question: "Dalam seni lukisan, bagaimanakah kesan bayang gelap dihasilkan menggunakan teknik stippling?",
+      options: [
+        "Merangkaikan kepadatan titik-titik halus yang sangat rapat",
+        "Menggosok pensel menggunakan jari tangan",
+        "Menggores kertas dengan objek tajam",
+        "Melukis bulatan besar berwarna putih"
+      ],
+      correct: 0,
+      hint: "Semakin rapat jarak antara titik, semakin gelap ton ilusi yang terhasil.",
+      rationale: "Teknik stippling bergantung pada densiti atau kepadatan susunan bintik-bintik dakwat untuk mencipta gradasi ton."
+    },
+    {
+      bidang: "2. Seni Halus",
+      subjek: "Tokoh Pelukis Catan Tempatan",
+      svgType: "pelukis_batik",
+      question: "Siapakah tokoh pelopor Seni Catan Batik di Malaysia yang terkenal dengan karya kehidupan desa?",
+      options: [
+        "Dato' Chuah Thean Teng",
+        "Syed Ahmad Jamal",
+        "Lat (Dato' Mohammad Nor Khalid)",
+        "Redza Piyadasa"
+      ],
+      correct: 0,
+      hint: "Beliau mengangkat kraf batik tradisional menjadi medium catan seni halus dunia.",
+      rationale: "Dato' Chuah Thean Teng diiktiraf sebagai perintis teknik catan batik halus di peringkat antarabangsa."
+    }
+  ],
+
+  // BIDANG 3: REKA BENTUK (10 Soalan)
+  bidang3: [
+    {
+      bidang: "3. Reka Bentuk",
+      subjek: "Landskap Konsep Islam",
+      svgType: "landskap_islam",
+      question: "Apakah ciri falsafah yang paling sinonim dengan Reka Bentuk Landskap Konsep Islam?",
+      options: [
+        "Kewujudan elemen air (kolam/pancuran) yang menenangkan dan corak geometri yang simetri",
+        "Taman batu kering (Zen garden) dengan lumut tebal",
+        "Patung ukiran manusia bersaiz gergasi",
+        "Laluan berliku-liku tanpa titik tumpu"
+      ],
+      correct: 0,
+      hint: "Menggambarkan ketenangan syurga seperti di Istana Alhambra.",
+      rationale: "Landskap Islam berteraskan falsafah ketenangan, bayangan teduh pepohon, geometri seimbang dan elemen air mengalir."
+    },
+    {
+      bidang: "3. Reka Bentuk",
+      subjek: "Elemen Landskap Lembut",
+      svgType: "softscape",
+      question: "Antara berikut, yang manakah diklasifikasikan sebagai elemen 'Softscape' (Landskap Lembut)?",
+      options: [
+        "Rumput karpet, pokok palma, dan bunga melur",
+        "Gazebo kayu, bangku konkrit, dan lampu taman",
+        "Laluan pejalan kaki berturap batu bata",
+        "Pagar dawai besi dan pergola simen"
+      ],
+      correct: 0,
+      hint: "Elemen yang terdiri daripada benda hidup dan tumbuhan.",
+      rationale: "Softscape merujuk kepada komponen hidup seperti flora, semak, pokok peneduh dan rumput, manakala binaan kaku ialah hardscape."
+    },
+    {
+      bidang: "3. Reka Bentuk",
+      subjek: "Prinsip Hiasan Dalaman",
+      svgType: "ergonomik_ruang",
+      question: "Apakah maksud aspek 'Ergonomik' dalam reka bentuk susun atur hiasan dalaman dan perabot?",
+      options: [
+        "Kesesuaian saiz dan rekaan perabot terhadap dimensi tubuh manusia untuk keselesaan dan keselamatan",
+        "Pemilihan warna cat dinding yang paling terang",
+        "Penggunaan lampu gantung kristal yang paling mewah",
+        "Keluasan ruang yang dibiarkan kosong tanpa perabot"
+      ],
+      correct: 0,
+      hint: "Mengutamakan postur fizikal manusia dan kemudahan pergerakan pengguna.",
+      rationale: "Ergonomik merupakan sains mereka bentuk ruang dan peralatan agar selari dengan fizikal dan keselesaan pengguna bagi mengelakkan keletihan atau kecederaan."
+    },
+    {
+      bidang: "3. Reka Bentuk",
+      subjek: "Pelan Lantai (Floor Plan)",
+      svgType: "pelan_lantai",
+      question: "Lukisan berskala yang menunjukkan pandangan ruang kediaman dari arah atas (pandangan mata burung) dinamakan:",
+      options: [
+        "Pelan Lantai (Floor Plan)",
+        "Lukisan Keratan Rentas",
+        "Lukisan Isometrik 3D",
+        "Lukisan Perspektif 1 Titik"
+      ],
+      correct: 0,
+      hint: "Memaparkan dinding, susun atur pintu, tingkap, dan perabot dari pandangan aras atas.",
+      rationale: "Pelan lantai merupakan lukisan ortografik teknikal yang melihat ruang kediaman secara menegak dari pandangan atas berskala piawai."
+    },
+    {
+      bidang: "3. Reka Bentuk",
+      subjek: "Landskap Konsep Jepun",
+      svgType: "landskap_jepun",
+      question: "Ciri landskap yang menggunakan hamparan batu kerikil disisir kemas, batu bongkah, dan buluh untuk meditasi dikenali sebagai:",
+      options: [
+        "Landskap Jepun (Zen)",
+        "Landskap Inggeris",
+        "Landskap Tropika Bali",
+        "Landskap Melayu Tradisional"
+      ],
+      correct: 0,
+      hint: "Simbolik kepada aliran ombak laut dan gunung dalam saiz mikro.",
+      rationale: "Taman Zen Jepun (Karesansui) menggunakan pasir kerikil bergaris gelombang dan formasi batu bagi mencipta ketenangan meditasi minda."
+    },
+    {
+      bidang: "3. Reka Bentuk",
+      subjek: "Reka Bentuk Industri Automotif",
+      svgType: "reka_automotif",
+      question: "Dalam proses evolusi reka bentuk automotif moden, apakah tujuan menghasilkan model skala tanah liat (clay model)?",
+      options: [
+        "Menilai aerodinamik, pantulan cahaya, dan garis bentuk kenderaan secara 3D fizikal",
+        "Untuk dijual terus kepada pelanggan di bilik pameran",
+        "Untuk menguji kekuatan enjin kenderaan",
+        "Dijadikan bahan kempen kitar semula"
+      ],
+      correct: 0,
+      hint: "Model berskala ini diukir manual atau menggunakan mesin pengisar CNC sebelum pembuatan acuan kilang.",
+      rationale: "Model tanah liat industri membolehkan pereka menyempurnakan lekuk aerodinamik dan proporsi badan kereta secara teliti dalam bentuk 3D nyata."
+    },
+    {
+      bidang: "3. Reka Bentuk",
+      subjek: "Reka Bentuk Perabot",
+      svgType: "perabot_reka",
+      question: "Antara faktor utama yang dinilai dalam reka bentuk produk industri seperti kerusi pejabat ialah:",
+      options: [
+        "Fungsi, ergonomik, ketahanan bahan, dan daya tarikan estetika",
+        "Berat yang paling berat supaya tidak beralih",
+        "Menggunakan warna emas sahaja",
+        "Tidak mempunyai roda atau bahagian boleh laras"
+      ],
+      correct: 0,
+      hint: "Gabungan fungsi praktikal dan kecantikan visual.",
+      rationale: "Reka bentuk produk industri yang baik mengimbangi fungsi (function), ergonomik keselesaan, kekuatan struktur bahan serta nilai estetika."
+    },
+    {
+      bidang: "3. Reka Bentuk",
+      subjek: "Pencahayaan Hiasan Dalaman",
+      svgType: "pencahayaan",
+      question: "Lampu meja belajar atau lampu sorot lukisan dikategorikan dalam jenis pencahayaan:",
+      options: [
+        "Pencahayaan Tugas (Task lighting) / Penegas (Accent)",
+        "Pencahayaan Semula Jadi Siang",
+        "Pencahayaan Umum Malap (Ambient)",
+        "Pencahayaan Luar Rumah"
+      ],
+      correct: 0,
+      hint: "Memberi fokus cahaya khusus untuk aktiviti membaca atau menyerlahkan objek tertentu.",
+      rationale: "Task lighting menyediakan pencahayaan khusus berarah untuk aktiviti seperti menulis, memasak atau meneliti hasil seni."
+    },
+    {
+      bidang: "3. Reka Bentuk",
+      subjek: "Peranan Pereka Landskap",
+      svgType: "pereka_landskap",
+      question: "Apakah peranan utama seorang Pereka Landskap profesional?",
+      options: [
+        "Merancang, mereka bentuk, dan mengurus ruang luaran berlandaskan analisis tapak dan keperluan alam sekitar",
+        "Menanam pokok semata-mata mengikut arahan pemaju",
+        "Membina enjin kenderaan",
+        "Melukis mural pada dinding bangunan"
+      ],
+      correct: 0,
+      hint: "Melibatkan pelan tapak, pemilihan spesies tumbuhan dan keseimbangan ekologi.",
+      rationale: "Pereka landskap menggabungkan seni bina, sains alam sekitar dan seni visual untuk menyusun ruang luar yang indah, mampan dan berfungsi."
+    },
+    {
+      bidang: "3. Reka Bentuk",
+      subjek: "Simbol Piawai Landskap",
+      svgType: "simbol_pelan",
+      question: "Mengapakah simbol piawai dan skala nisbah digunakan dalam penghasilan pelan tapak landskap?",
+      options: [
+        "Memudahkan kontraktor dan pembina membaca serta merealisasikan pelan dengan saiz sebenar yang tepat",
+        "Sebagai hiasan warna-warni pada kertas pelan",
+        "Supaya pelan sukar difahami oleh orang lain",
+        "Mengurangkan kos kertas lukisan"
+      ],
+      correct: 0,
+      hint: "Menjamin keseragaman piawaian teknikal seni bina antarabangsa.",
+      rationale: "Simbol piawai dan nisbah skala membolehkan ukuran tapak diterjemahkan kepada saiz fizikal dengan tepat semasa fasa pembinaan sebenar."
+    }
+  ],
+
+  // BIDANG 4: SENI KRAF (10 Soalan)
+  bidang4: [
+    {
+      bidang: "4. Seni Kraf",
+      subjek: "Seni Tekat",
+      svgType: "seni_tekat",
+      question: "Apakah fungsi alat yang dipanggil 'Cuban' dalam proses menekat benang emas?",
+      options: [
+        "Kayu bercabang dua untuk melilit dan mengawal tegangan benang emas",
+        "Alat untuk memotong kain baldu",
+        "Rangka kayu untuk menegangkan kain dasar",
+        "Jarum khas untuk menebuk kad mempulur"
+      ],
+      correct: 0,
+      hint: "Diperbuat daripada kayu atau buluh licin berbentuk gelendong bercabang.",
+      rationale: "Cuban berfungsi sebagai tempat menggulung benang emas atau perak agar tidak kusut dan mudah dilayangkan semasa proses menekat."
+    },
+    {
+      bidang: "4. Seni Kraf",
+      subjek: "Bahan Mempulur Tekat",
+      svgType: "mempulur",
+      question: "Apakah 'Mempulur' dalam seni tekat timbul benang emas?",
+      options: [
+        "Kertas tebal atau kad manila yang dipotong mengikut motif sebagai acuan timbulan corak",
+        "Kain pelapik di belakang baldu",
+        "Pencuci benang emas",
+        "Minyak pelincir jarum"
+      ],
+      correct: 0,
+      hint: "Bahan ini diletakkan di atas kain baldu sebelum benang emas ditindih merentasinya.",
+      rationale: "Mempulur merupakan teras atau acuan motif yang dipotong tebal supaya benang emas yang ditindih di atasnya kelihatan timbul dan kemas."
+    },
+    {
+      bidang: "4. Seni Kraf",
+      subjek: "Kain Dasar Tekat",
+      svgType: "kain_baldu",
+      question: "Apakah jenis fabrik yang paling lazim digunakan sebagai kain dasar untuk seni tekat tradisi Melayu kerana sifatnya yang gebu?",
+      options: [
+        "Kain Baldu (Velvet) merah hati atau biru gelap",
+        "Kain kasa jarang",
+        "Kain denim",
+        "Kain nilon sintetik"
+      ],
+      correct: 0,
+      hint: "Permukaan kain yang berbulu lembut menaikkan kilauan benang emas.",
+      rationale: "Kain baldu gelap menyerlahkan kontra dan kilauan warna keemasan benang logam tekat."
+    },
+    {
+      bidang: "4. Seni Kraf",
+      subjek: "Langkah Anyaman: Lagang",
+      svgType: "anyaman_lagang",
+      question: "Dalam seni anyaman tikar, apakah istilah bagi proses memulakan tulang dasar atau barisan awal anyaman?",
+      options: [
+        "Melagang (Lagang)",
+        "Mepepeh (Pepeh)",
+        "Menyisip",
+        "Menjangka"
+      ],
+      correct: 0,
+      hint: "Langkah paling awal yang menentukan ketepatan saiz dan arah anyaman.",
+      rationale: "Melagang ialah langkah asas memulakan anyaman pada bahagian tengah atau sudut tikar sebelum diteruskan ke bahagian badan."
+    },
+    {
+      bidang: "4. Seni Kraf",
+      subjek: "Alat Penganyam: Jangka",
+      svgType: "jangka_anyam",
+      question: "Apakah fungsi alat 'Jangka' dalam proses penyediaan daun mengkuang atau pandan?",
+      options: [
+        "Membelah atau menghiris daun mengkuang menjadi jalur-jalur halus yang sama lebar",
+        "Meratakan tikar yang telah siap",
+        "Mengukur kepanasan air pewarna",
+        "Mengikis duri daun mengkuang"
+      ],
+      correct: 0,
+      hint: "Alat kayu yang dipasang beberapa mata pisau kecil tajam berjarak sekata.",
+      rationale: "Jangka mempunyai mata pisau tajam berbaris selari bagi menyeragamkan kelebaran bilah daun anyaman."
+    },
+    {
+      bidang: "4. Seni Kraf",
+      subjek: "Proses Melayur Daun",
+      svgType: "layur_daun",
+      question: "Mengapakah daun mengkuang perlu dilayur di atas bara api sebelum dianyam?",
+      options: [
+        "Untuk melembutkan daun dan mematikan urat daun supaya lebih tahan serta tidak mudah patah",
+        "Untuk menukar warna daun menjadi hitam arang",
+        "Supaya daun mengecut menjadi separuh saiz",
+        "Untuk membakar bau wangi daun"
+      ],
+      correct: 0,
+      hint: "Proses pemanasan haba ringan.",
+      rationale: "Melayur di atas api lembut melenturkan serat daun mengkuang agar lembut dan liat semasa proses menjangka dan menganyam."
+    },
+    {
+      bidang: "4. Seni Kraf",
+      subjek: "Corak Kelarai Anyaman",
+      svgType: "corak_kelarai",
+      question: "Apakah yang dimaksudkan dengan istilah 'Kelarai' dalam seni anyaman tikar?",
+      options: [
+        "Motif atau corak berulang yang terhasil melalui kiraan bilangan jalur anyaman (contoh: Kelarai Beras Patah)",
+        "Bahan pengawet daun pandan",
+        "Nama bakul bertangkai dua",
+        "Pencelup warna kimia"
+      ],
+      correct: 0,
+      hint: "Pola grafik geometri atau flora yang dihasilkan melalui teknik angkat dan tindih.",
+      rationale: "Kelarai ialah ragam hias anyaman yang terbina daripada teknik variasi kiraan silang jalur mengkuang berwarna."
+    },
+    {
+      bidang: "4. Seni Kraf",
+      subjek: "Proses Penyudah: Pepeh & Sisip",
+      svgType: "pepeh_sisip",
+      question: "Apakah fungsi proses 'Menyisip' pada peringkat akhir pembuatan tikar anyaman?",
+      options: [
+        "Menyelitkan lebihan hujung bilah mengkuang ke dalam badan anyaman supaya kemas dan tidak terurai",
+        "Mencelup tikar ke dalam minyak kilat",
+        "Menjemur tikar di bawah terik matahari",
+        "Memotong bahagian tengah tikar"
+      ],
+      correct: 0,
+      hint: "Langkah mengunci tepi anyaman menggunakan alat penyisip tulang atau buluh.",
+      rationale: "Menyisip bertujuan mematikan dan menyembunyikan lebihan helaian daun ke celah anyaman agar jalinan kukuh dan kelihatan kemas."
+    },
+    {
+      bidang: "4. Seni Kraf",
+      subjek: "Pusat Seni Tekat Terkenal",
+      svgType: "kuala_kangsar",
+      question: "Daerah manakah di Malaysia yang sangat masyhur sebagai pusat pemeliharaan dan pengeluaran seni tekat tradisi diraja?",
+      options: [
+        "Kuala Kangsar, Perak",
+        "Kota Bharu, Kelantan",
+        "Batu Pahat, Johor",
+        "Alor Setar, Kedah"
+      ],
+      correct: 0,
+      hint: "Bandar diraja di negeri Perak di mana Tokoh Pandai Kraf Puan Azizah Mohd Yusof menetap.",
+      rationale: "Kuala Kangsar, Perak terkenal sejak zaman berzaman dengan warisan seni tekat benang emas berkualiti tinggi untuk istana dan masyarakat."
+    },
+    {
+      bidang: "4. Seni Kraf",
+      subjek: "Perbezaan Pandan dan Mengkuang",
+      svgType: "pandan_mengkuang",
+      question: "Apakah perbezaan fizikal utama antara daun mengkuang dengan daun pandan duri untuk anyaman?",
+      options: [
+        "Daun mengkuang lebih lebar, tebal dan keras (sesuai untuk tikar), manakala daun pandan lebih lembut dan kecil (sesuai untuk bakul kecil)",
+        "Daun mengkuang berwarna kuning manakala daun pandan tiada duri",
+        "Daun mengkuang berbau wangi pandan semula jadi",
+        "Daun pandan hanya boleh dianyam semasa basah"
+      ],
+      correct: 0,
+      hint: "Tumbuhan mengkuang tumbuh subur di kawasan paya pantai dengan daun bersaiz besar tebal.",
+      rationale: "Daun mengkuang berserat lebih tebal dan lasak, manakala daun pandan lebih halus, licin dan sering digunakan untuk anyaman barangan cenderamata halus."
+    }
+  ],
+
+  // BIDANG 5: KOMUNIKASI VISUAL (10 Soalan)
+  bidang5: [
+    {
+      bidang: "5. Komunikasi Visual",
+      subjek: "Klasifikasi Tipografi (Serif)",
+      svgType: "font_serif",
+      question: "Apakah ciri utama bagi jenis muka taip (font) kategori 'Serif'?",
+      options: [
+        "Mempunyai garisan unjuran kecil (kaki/serik) di hujung setiap strok huruf",
+        "Tiada sebarang kaki atau unjuran di hujung huruf",
+        "Menyerupai tulisan tangan bersambung",
+        "Huruf yang diisi dengan corak kartun beranimasi"
+      ],
+      correct: 0,
+      hint: "Contoh font Serif ialah Times New Roman dan Georgia.",
+      rationale: "Fon Serif mempunyai unjuran kecil di bahagian tapak atau hujung strok yang membantu kelancaran mata membaca teks bercetak panjang."
+    },
+    {
+      bidang: "5. Komunikasi Visual",
+      subjek: "Klasifikasi Fon Sans Serif",
+      svgType: "font_sans_serif",
+      question: "Istilah perkataan Perancis 'Sans' dalam tipografi Sans Serif bermaksud:",
+      options: [
+        "Tanpa (Tanpa kaki / unjuran)",
+        "Tebal",
+        "Condong",
+        "Melengkung"
+      ],
+      correct: 0,
+      hint: "Contohnya Arial dan Helvetica yang berwajah bersih dan moden.",
+      rationale: "'Sans' bermaksud 'tanpa' dalam bahasa Perancis, merujuk kepada huruf ringkas moden tanpa sebarang unjuran kaki serif."
+    },
+    {
+      bidang: "5. Komunikasi Visual",
+      subjek: "Anatomi Tipografi: Baseline",
+      svgType: "anatomi_huruf",
+      question: "Garisan halimunan tempat letaknya garisan dasar bagi semua huruf duduk secara mendatar dinamakan:",
+      options: [
+        "Baseline",
+        "Ascender line",
+        "Cap height",
+        "Descender line"
+      ],
+      correct: 0,
+      hint: "Garis tapak seperti garisan buku tulis murid.",
+      rationale: "Baseline merupakan garis panduan dasar utama di mana tapak badan huruf terletak sebaris."
+    },
+    {
+      bidang: "5. Komunikasi Visual",
+      subjek: "Anatomi Tipografi: Descender",
+      svgType: "descender_anatomy",
+      question: "Bahagian batang huruf kecil seperti 'g', 'p', 'q', dan 'y' yang menjulur ke bawah melepasi paras 'Baseline' dipanggil:",
+      options: [
+        "Descender",
+        "Ascender",
+        "Serif",
+        "Crossbar"
+      ],
+      correct: 0,
+      hint: "Menurun ke bawah (descending).",
+      rationale: "Descender ialah bahagian ekor atau batang huruf yang terjuntai turun melepasi aras baseline."
+    },
+    {
+      bidang: "5. Komunikasi Visual",
+      subjek: "Fungsi Aperture Kamera",
+      svgType: "aperture_diafragma",
+      question: "Apakah kesan terhadap gambar apabila jurugambar menggunakan bukaan Aperture yang besar (contohnya f/1.8)?",
+      options: [
+        "Latar belakang menjadi kabur (bokeh) dengan kedalaman medan (DoF) yang cetek",
+        "Keseluruhan imej dari depan ke belakang menjadi tajam sama rata",
+        "Gambar menjadi sangat gelap gelita",
+        "Imej menjadi pecah dengan noise hitam putih"
+      ],
+      correct: 0,
+      hint: "Bukaan aperture besar membenarkan banyak cahaya masuk dan memfokuskan subjek utama sahaja.",
+      rationale: "Aperture besar (nilai f-angka kecil) menghasilkan kedalaman medan yang cetek (shallow depth of field) menghasilkan latar bokeh artistik."
+    },
+    {
+      bidang: "5. Komunikasi Visual",
+      subjek: "Fungsi Shutter Speed",
+      svgType: "shutter_speed",
+      question: "Untuk merakam aksi atlet lari pecut yang sedang bergerak laju agar aksinya 'beku' (freeze-frame) tanpa kesan kabur, apakah tetapan yang tepat?",
+      options: [
+        "Shutter speed yang sangat pantas (contoh: 1/1000 saat)",
+        "Shutter speed perlahan (contoh: 2 saat)",
+        "Mematikan fungsi fokus automatik",
+        "Menggunakan aperture f/22"
+      ],
+      correct: 0,
+      hint: "Tirai pengatup sensor perlu dibuka dan ditutup dalam pecahan saat yang sangat cepat.",
+      rationale: "Shutter speed tinggi (1/500s atau 1/1000s ke atas) membekukan pergerakan laju tanpa gegaran pergerakan (motion blur)."
+    },
+    {
+      bidang: "5. Komunikasi Visual",
+      subjek: "Sensitiviti ISO Kamera",
+      svgType: "iso_sensor",
+      question: "Apakah kesan sampingan yang berlaku kepada gambar jika tetapan ISO dinaikkan terlalu tinggi (contohnya ISO 6400)?",
+      options: [
+        "Imej kelihatan berbintik-bintik kasar atau berbintik hingar (digital noise / grain)",
+        "Warna imej bertukar menjadi hitam sepenuhnya",
+        "Kelajuan kamera mengambil gambar menjadi 10 kali lebih lambat",
+        "Bateri kamera akan serta-merta kehabisan kuasa"
+      ],
+      correct: 0,
+      hint: "Noise visual menyerupai butiran pasir halus pada kawasan gelap.",
+      rationale: "Menaikkan nilai ISO menguatkan isyarat sensor cahaya tetapi mengakibatkan pertambahan bintik digital noise yang mengurangkan kejelasan perincian."
+    },
+    {
+      bidang: "5. Komunikasi Visual",
+      subjek: "Komposisi: Petua Pertigaan",
+      svgType: "rule_of_thirds",
+      question: "Apakah teknik komposisi fotografi yang membahagikan bingkai imej kepada 9 kotak sama rata melalui 2 garisan menegak dan 2 garisan melintang?",
+      options: [
+        "Rule of Thirds (Petua Pertigaan)",
+        "Simetri Pusat Tulen",
+        "Sudut Pandangan Cacing (Worm's eye view)",
+        "Teknik Bingkai dalam Bingkai"
+      ],
+      correct: 0,
+      hint: "Subjek utama diletakkan pada salah satu daripada 4 titik persilangan garisan.",
+      rationale: "Rule of Thirds meletakkan titik tumpu utama pada persilangan garisan pertigaan untuk menghasilkan gubahan visual yang lebih dinamik dan estetik."
+    },
+    {
+      bidang: "5. Komunikasi Visual",
+      subjek: "Teknik Leading Lines",
+      svgType: "leading_lines",
+      question: "Teknik menggunakan garisan semula jadi seperti jalan raya, rel kereta api, atau pagar untuk memandu mata penonton ke arah subjek dipanggil:",
+      options: [
+        "Leading Lines (Garisan Penunjuk)",
+        "Dutch Angle",
+        "Panorama 360",
+        "Silhouette"
+      ],
+      correct: 0,
+      hint: "Garisan visual yang mengarahkan pandangan ke titik fokus utama.",
+      rationale: "Leading lines memanfaatkan garisan linear persekitaran bagi memandu arah pergerakan mata audiens ke subjek utama secara visual."
+    },
+    {
+      bidang: "5. Komunikasi Visual",
+      subjek: "Sudut Pandangan Kamera (Camera Angle)",
+      svgType: "angle_view",
+      question: "Sudut kamera yang diambil dari aras bawah menghadap ke atas subjek untuk memberikan kesan megah, berkuasa, dan gagah dikenali sebagai:",
+      options: [
+        "Sudut Rendah (Low Angle)",
+        "Sudut Tinggi (High Angle)",
+        "Sudut Pandangan Mata Burung (Bird's eye view)",
+        "Sudut Aras Mata (Eye Level)"
+      ],
+      correct: 0,
+      hint: "Melihat dari bawah ke atas membuatkan objek kelihatan lebih tinggi dan dominan.",
+      rationale: "Low Angle merakam subjek dari sudut bawah ke atas, mencetuskan ilusi visual yang berwibawa, megah dan dominan."
+    }
+  ]
+};
+
+/* =====================================================================
+   STATE MANAGEMENT & GAME SHOW CONTROLLER
+   ===================================================================== */
+let gameState = {
+  studentName: "",
+  studentClass: "",
+  currentRound: 1, // 1: Cepat Tepat (5 q), 2: Mata Berganda (5 q), 3: Jutawan (5 q)
+  currentQuestionIndex: 0,
+  score: 0,
+  correctCount: 0,
+  wrongCount: 0,
+  totalAnswered: 0,
+  activeQuestions: [],
+  timerInterval: null,
+  timeLeft: 15,
+  roundTotalSeconds: 15,
+  isAnswerSubmitted: false,
+  soundMuted: false,
+  lifeline5050Available: true,
+  lifelineHintAvailable: true,
+  googleSheetUrl: "https://script.google.com/macros/s/AKfycbyR_DemoGoogleSheetPSV_T3/exec",
+  sessionHistory: []
+};
+
+/* Web Audio Synthesizer for Studio Sound FX (No external audio file dependencies) */
+let audioCtx = null;
+function initAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) {
+      audioCtx = new AudioContextClass();
+    }
+  }
+}
+
+function playTone(freq, type = 'sine', duration = 0.2, gainValue = 0.15) {
+  if (gameState.soundMuted) return;
+  try {
+    initAudioContext();
+    if (!audioCtx) return;
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gainNode.gain.setValueAtTime(gainValue, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch (e) {
+    console.warn("Audio Tone Error", e);
+  }
+}
+
+function playCorrectSound() {
+  if (gameState.soundMuted) return;
+  playTone(523.25, 'triangle', 0.15, 0.2); // C5
+  setTimeout(() => playTone(659.25, 'triangle', 0.15, 0.2), 120); // E5
+  setTimeout(() => playTone(783.99, 'triangle', 0.35, 0.25), 240); // G5
+}
+
+function playWrongSound() {
+  if (gameState.soundMuted) return;
+  playTone(260, 'sawtooth', 0.25, 0.25);
+  setTimeout(() => playTone(196, 'sawtooth', 0.45, 0.25), 200);
+}
+
+function playRoundStartSound() {
+  if (gameState.soundMuted) return;
+  playTone(392, 'square', 0.1, 0.15);
+  setTimeout(() => playTone(523.25, 'square', 0.1, 0.15), 100);
+  setTimeout(() => playTone(659.25, 'square', 0.1, 0.15), 200);
+  setTimeout(() => playTone(1046.50, 'square', 0.3, 0.2), 300);
+}
+
+function playTickSound() {
+  if (gameState.soundMuted) return;
+  playTone(880, 'sine', 0.05, 0.05);
+}
+
+function playVictoryFanfare() {
+  if (gameState.soundMuted) return;
+  const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
+  notes.forEach((freq, idx) => {
+    setTimeout(() => playTone(freq, 'triangle', 0.28, 0.25), idx * 160);
+  });
+}
+
+function toggleAudio() {
+  gameState.soundMuted = !gameState.soundMuted;
+  const icon = document.getElementById("audioIcon");
+  if (gameState.soundMuted) {
+    icon.className = "fa-solid fa-volume-xmark";
+    showToast("Audio studio disenyapkan", "info");
+  } else {
+    icon.className = "fa-solid fa-volume-high";
+    showToast("Audio studio diaktifkan", "success");
+    playTone(600, 'sine', 0.1, 0.2);
+  }
+}
+
+/* =====================================================================
+   VIEW NAVIGATION & NOTES MODULE
+   ===================================================================== */
+function goToStudyNotes() {
+  const nameInput = document.getElementById("inputStudentName").value.trim();
+  const classInput = document.getElementById("inputStudentClass").value.trim();
+
+  if (!nameInput || !classInput) {
+    const err = document.getElementById("regError");
+    err.classList.remove("hidden");
+    return;
+  }
+
+  gameState.studentName = nameInput;
+  gameState.studentClass = classInput;
+  document.getElementById("playerDisplay").innerText = `${nameInput} (${classInput})`;
+  document.getElementById("playerBadge").classList.remove("hidden");
+
+  // Show notes view
+  document.getElementById("viewWelcome").classList.add("hidden");
+  document.getElementById("viewNotes").classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showToast("Bilik Persediaan: Sila ulangi bacaan nota 5 bidang", "info");
+}
+
+function switchNoteTab(tabId) {
+  // Reset buttons
+  document.querySelectorAll(".note-tab-btn").forEach(btn => {
+    btn.className = "note-tab-btn px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-bold text-xs whitespace-nowrap transition flex items-center gap-2";
+  });
+  // Hide contents
+  document.querySelectorAll(".note-tab-content").forEach(content => {
+    content.classList.add("hidden");
+  });
+
+  const activeBtn = document.getElementById("tabBtn" + tabId.replace("tab", ""));
+  if (activeBtn) {
+    activeBtn.className = "note-tab-btn px-4 py-2 rounded-xl bg-yellow-400 text-black font-bold text-xs whitespace-nowrap transition flex items-center gap-2 shadow-lg shadow-yellow-500/20";
+  }
+
+  const activeContent = document.getElementById("tabContent" + tabId.replace("tab", ""));
+  if (activeContent) {
+    activeContent.classList.remove("hidden");
+  }
+  playTone(500, 'sine', 0.08, 0.1);
+}
+
+function toggleStartQuizButton() {
+  const checkbox = document.getElementById("checkReadDone");
+  const btn = document.getElementById("btnStartGame");
+  if (checkbox.checked) {
+    btn.disabled = false;
+    btn.className = "w-full md:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 text-black font-extrabold text-sm font-tv tracking-wider shadow-lg shadow-amber-500/30 btn-stage flex items-center justify-center gap-2 animate-pulse";
+    document.getElementById("readTimeTracker").innerText = "Status: Sedia Berentap di Pentas!";
+    playTone(700, 'triangle', 0.15, 0.2);
+  } else {
+    btn.disabled = true;
+    btn.className = "w-full md:w-auto px-8 py-3.5 rounded-xl bg-gray-600 text-gray-400 font-extrabold text-sm font-tv tracking-wider cursor-not-allowed transition duration-200 flex items-center justify-center gap-2";
+    document.getElementById("readTimeTracker").innerText = "Status: Membaca Nota...";
+  }
+}
+
+/* =====================================================================
+   ROUND SETUP & QUESTION CURATION
+   ===================================================================== */
+function initGameSession() {
+  initAudioContext();
+  playRoundStartSound();
+
+  document.getElementById("viewNotes").classList.add("hidden");
+  document.getElementById("viewGame").classList.remove("hidden");
+  document.getElementById("viewResults").classList.add("hidden");
+
+  // Assemble dynamic pool: Pick exactly 15 questions distributed equally across the 5 categories
+  // 3 questions from each of the 5 bidang = 15 questions total.
+  // Then sort them into 3 TV Rounds (5 questions in Round 1, 5 in Round 2, 5 in Round 3)
+  const pool = [];
+  const bidangKeys = ['bidang1', 'bidang2', 'bidang3', 'bidang4', 'bidang5'];
+
+  bidangKeys.forEach(key => {
+    const list = [...QUESTION_BANK[key]];
+    // Shuffle category questions
+    list.sort(() => 0.5 - Math.random());
+    // Pick 3 questions
+    pool.push(list[0], list[1], list[2]);
+  });
+
+  // Shuffle entire 15 questions
+  pool.sort(() => 0.5 - Math.random());
+
+  gameState.activeQuestions = pool;
+  gameState.currentQuestionIndex = 0;
+  gameState.score = 0;
+  gameState.correctCount = 0;
+  gameState.wrongCount = 0;
+  gameState.totalAnswered = 0;
+  gameState.currentRound = 1;
+  gameState.lifeline5050Available = true;
+  gameState.lifelineHintAvailable = true;
+  gameState.sessionHistory = [];
+
+  updateScoreUI();
+  updateLifelinesUI();
+  setupRoundRules();
+  loadQuestion();
+}
+
+function setupRoundRules() {
+  const roundIdx = Math.floor(gameState.currentQuestionIndex / 5) + 1;
+  gameState.currentRound = roundIdx;
+
+  const roundBadge = document.getElementById("roundBadge");
+  const roundTitle = document.getElementById("roundTitle");
+  const roundDesc = document.getElementById("roundRuleDesc");
+  const pointValueBadge = document.getElementById("pointValueBadge");
+
+  // Update ladder items
+  document.getElementById("ladderRound1").className = "p-2.5 rounded-xl bg-white/5 border border-white/10 opacity-60 flex items-center justify-between text-xs";
+  document.getElementById("ladderRound2").className = "p-2.5 rounded-xl bg-white/5 border border-white/10 opacity-60 flex items-center justify-between text-xs";
+  document.getElementById("ladderRound3").className = "p-2.5 rounded-xl bg-white/5 border border-white/10 opacity-60 flex items-center justify-between text-xs";
+  document.getElementById("ladderBadge1").innerText = "Selesai";
+  document.getElementById("ladderBadge2").innerText = "Kunci";
+  document.getElementById("ladderBadge3").innerText = "Kunci";
+
+  if (roundIdx === 1) {
+    gameState.roundTotalSeconds = 15;
+    roundBadge.className = "px-3.5 py-1.5 rounded-xl font-tv text-xs bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-md";
+    roundBadge.innerText = "PUSINGAN 1";
+    roundTitle.innerText = "Soalan Cepat Tepat";
+    roundDesc.innerText = "15 Saat setiap soalan! Jawapan pantas membawa +100 Mata.";
+    pointValueBadge.innerText = "+100 MATA";
+    document.getElementById("ladderRound1").className = "p-2.5 rounded-xl bg-blue-950/60 border border-blue-400/40 flex items-center justify-between text-xs shadow-md";
+    document.getElementById("ladderBadge1").className = "text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold";
+    document.getElementById("ladderBadge1").innerText = "Aktif";
+  } else if (roundIdx === 2) {
+    gameState.roundTotalSeconds = 20;
+    roundBadge.className = "px-3.5 py-1.5 rounded-xl font-tv text-xs bg-gradient-to-r from-purple-600 to-pink-700 text-white shadow-md animate-pulse";
+    roundBadge.innerText = "PUSINGAN 2";
+    roundTitle.innerText = "Risiko Mata Berganda";
+    roundDesc.innerText = "Mata digandakan! Betul = +200 Mata, Silap = -50 Mata.";
+    pointValueBadge.innerText = "+200 MATA (RISIKO -50)";
+    document.getElementById("ladderRound2").className = "p-2.5 rounded-xl bg-purple-950/60 border border-purple-400/40 flex items-center justify-between text-xs shadow-md";
+    document.getElementById("ladderBadge2").className = "text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-bold";
+    document.getElementById("ladderBadge2").innerText = "Aktif";
+  } else {
+    gameState.roundTotalSeconds = 25;
+    roundBadge.className = "px-3.5 py-1.5 rounded-xl font-tv text-xs bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-md font-black animate-pulse";
+    roundBadge.innerText = "PUSINGAN 3";
+    roundTitle.innerText = "Cabaran Jutawan Seni";
+    roundDesc.innerText = "Soalan berprestij tinggi! Setiap jawapan tepat dinilai +500 MATA!";
+    pointValueBadge.innerText = "+500 MATA MEGA";
+    document.getElementById("ladderRound3").className = "p-2.5 rounded-xl bg-amber-950/60 border border-amber-400/40 flex items-center justify-between text-xs shadow-md";
+    document.getElementById("ladderBadge3").className = "text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold";
+    document.getElementById("ladderBadge3").innerText = "PENTAS JUTAWAN";
+  }
+}
+
+/* =====================================================================
+   DYNAMIC SVG GRAPHIC GENERATOR FOR STAGE SCREEN
+   ===================================================================== */
+function generateStageSVG(type, topicName) {
+  // Rich SVG Illustrations themed for Malaysian Art Education
+  switch (type) {
+    case 'baju_melayu':
+    case 'sari_doti':
+    case 'baju_kadazan':
+    case 'cheongsam':
+    case 'sugu_tinggi':
+    case 'dokoh':
+    case 'pending':
+    case 'motif_flora':
+    case 'kain_sirat':
+    case 'tokoh_seni':
+      return `
+        <svg viewBox="0 0 400 140" class="w-full h-full max-h-36">
+          <defs>
+            <linearGradient id="goldG" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fde047"/>
+              <stop offset="50%" stop-color="#ca8a04"/>
+              <stop offset="100%" stop-color="#eab308"/>
+            </linearGradient>
+            <linearGradient id="velvetG" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#991b1b"/>
+              <stop offset="100%" stop-color="#450a0a"/>
+            </linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="none"/>
+          <!-- Traditional Motifs Background Silhouette -->
+          <path d="M50,70 Q100,20 150,70 T250,70 T350,70" fill="none" stroke="rgba(234,179,8,0.3)" stroke-dasharray="4,4" stroke-width="2"/>
+          <!-- Dokoh / Pendant Graphic -->
+          <g transform="translate(140, 15)">
+            <polygon points="60,10 90,40 60,65 30,40" fill="url(#goldG)" stroke="#fef08a" stroke-width="2"/>
+            <polygon points="60,50 85,75 60,95 35,75" fill="url(#goldG)" stroke="#fef08a" stroke-width="1.5"/>
+            <polygon points="60,85 75,100 60,112 45,100" fill="url(#goldG)" stroke="#fef08a" stroke-width="1.5"/>
+            <circle cx="60" cy="38" r="8" fill="#991b1b"/>
+            <circle cx="60" cy="72" r="6" fill="#047857"/>
+            <circle cx="60" cy="98" r="4" fill="#1e3a8a"/>
+          </g>
+          <!-- Side Accents / Pucuk Rebung -->
+          <polygon points="40,110 55,50 70,110" fill="rgba(234,179,8,0.25)" stroke="#eab308" stroke-width="1.5"/>
+          <polygon points="330,110 345,50 360,110" fill="rgba(234,179,8,0.25)" stroke="#eab308" stroke-width="1.5"/>
+          <text x="50%" y="130" text-anchor="middle" fill="#fde047" font-size="12" font-weight="bold" letter-spacing="2">BIDANG 1: PAKAIAN & PERHIASAN DIRI</text>
+        </svg>
+      `;
+
+    case 'cross_hatching':
+    case 'catan_media':
+    case 'wet_on_wet':
+    case 'oil_palette':
+    case 'arca_jenis':
+    case 'arca_luakan':
+    case 'arca_mobail':
+    case 'stippling':
+    case 'pelukis_batik':
+    case 'lukisan_gua':
+      return `
+        <svg viewBox="0 0 400 140" class="w-full h-full max-h-36">
+          <defs>
+            <linearGradient id="brushG" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#3b82f6"/>
+              <stop offset="50%" stop-color="#8b5cf6"/>
+              <stop offset="100%" stop-color="#ec4899"/>
+            </linearGradient>
+          </defs>
+          <!-- Drawing Easel and Cross-Hatch Sphere -->
+          <g transform="translate(60, 20)">
+            <circle cx="50" cy="50" r="40" fill="#1e293b" stroke="#94a3b8" stroke-width="2"/>
+            <!-- Hatching lines -->
+            <path d="M25,35 L65,75 M35,25 L75,65 M45,20 L80,55" stroke="#38bdf8" stroke-width="2"/>
+            <!-- Cross Hatching lines -->
+            <path d="M25,65 L65,25 M35,75 L75,35 M45,80 L80,45" stroke="#ec4899" stroke-width="2"/>
+          </g>
+          <!-- Paint Palette & Sculpting Silhouette -->
+          <g transform="translate(240, 20)">
+            <path d="M20,60 C10,20 60,10 90,30 C120,50 110,85 80,95 C65,100 50,85 40,85 C30,85 25,95 15,80 Z" fill="#334155" stroke="#c084fc" stroke-width="2"/>
+            <circle cx="50" cy="35" r="7" fill="#ef4444"/>
+            <circle cx="75" cy="40" r="7" fill="#eab308"/>
+            <circle cx="85" cy="65" r="7" fill="#3b82f6"/>
+            <circle cx="65" cy="80" r="7" fill="#22c55e"/>
+            <!-- Thumb hole -->
+            <circle cx="35" cy="65" r="6" fill="#0f172a"/>
+          </g>
+          <!-- Dynamic Swoosh -->
+          <path d="M140,85 Q200,15 230,85" fill="none" stroke="url(#brushG)" stroke-width="5" stroke-linecap="round"/>
+          <text x="50%" y="130" text-anchor="middle" fill="#c084fc" font-size="12" font-weight="bold" letter-spacing="2">BIDANG 2: SENI HALUS (LUKISAN, CATAN, ARCA)</text>
+        </svg>
+      `;
+
+    case 'landskap_islam':
+    case 'softscape':
+    case 'ergonomik_ruang':
+    case 'pelan_lantai':
+    case 'landskap_jepun':
+    case 'reka_automotif':
+    case 'perabot_reka':
+    case 'pencahayaan':
+    case 'pereka_landskap':
+    case 'simbol_pelan':
+      return `
+        <svg viewBox="0 0 400 140" class="w-full h-full max-h-36">
+          <defs>
+            <linearGradient id="emeraldG" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#34d399"/>
+              <stop offset="100%" stop-color="#059669"/>
+            </linearGradient>
+          </defs>
+          <!-- Blueprint Grid Lines -->
+          <path d="M30,30 H370 M30,60 H370 M30,90 H370 M60,15 V105 M120,15 V105 M180,15 V105 M240,15 V105 M300,15 V105 M360,15 V105" stroke="rgba(16,185,129,0.15)" stroke-width="1"/>
+          <!-- Floor Plan Layout & Tree Symbol -->
+          <g transform="translate(60, 20)">
+            <rect x="0" y="0" width="110" height="75" fill="none" stroke="#34d399" stroke-width="2.5" stroke-dasharray="80,15,20"/>
+            <line x1="45" y1="0" x2="45" y2="75" stroke="#34d399" stroke-width="2"/>
+            <path d="M45,35 Q65,15 75,35" fill="none" stroke="#6ee7b7" stroke-width="1.5"/>
+          </g>
+          <!-- Landscape Foliage / Water Feature -->
+          <g transform="translate(240, 25)">
+            <!-- Islamic Fountain / Tree Graphic -->
+            <polygon points="50,10 65,35 90,35 70,55 80,80 50,65 20,80 30,55 10,35 35,35" fill="none" stroke="#10b981" stroke-width="2"/>
+            <circle cx="50" cy="45" r="14" fill="rgba(6,182,212,0.4)" stroke="#38bdf8" stroke-width="1.5"/>
+          </g>
+          <text x="50%" y="130" text-anchor="middle" fill="#34d399" font-size="12" font-weight="bold" letter-spacing="2">BIDANG 3: REKA BENTUK (LANDSKAP, RUANG, INDUSTRI)</text>
+        </svg>
+      `;
+
+    case 'seni_tekat':
+    case 'mempulur':
+    case 'kain_baldu':
+    case 'anyaman_lagang':
+    case 'jangka_anyam':
+    case 'layur_daun':
+    case 'corak_kelarai':
+    case 'pepeh_sisip':
+    case 'kuala_kangsar':
+    case 'pandan_mengkuang':
+      return `
+        <svg viewBox="0 0 400 140" class="w-full h-full max-h-36">
+          <defs>
+            <linearGradient id="amberG" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#b45309"/>
+            </linearGradient>
+          </defs>
+          <!-- Cuban and Gold Thread Graphic -->
+          <g transform="translate(70, 25)">
+            <!-- Cuban (Spool) -->
+            <path d="M15,10 C15,0 35,0 35,10 L30,45 C45,50 45,65 30,70 L35,105 C35,115 15,115 15,105 L20,70 C5,65 5,50 20,45 Z" fill="#78350f" stroke="#fbbf24" stroke-width="1.5"/>
+            <!-- Woven Gold Thread -->
+            <rect x="20" y="42" width="10" height="30" fill="#facc15"/>
+            <path d="M30,55 Q70,40 100,70" fill="none" stroke="#fde047" stroke-width="2.5" stroke-dasharray="4,2"/>
+          </g>
+          <!-- Kelarai Anyaman Weave Graphic -->
+          <g transform="translate(230, 20)">
+            <rect x="0" y="0" width="100" height="75" rx="8" fill="#1c1917" stroke="#d97706" stroke-width="2"/>
+            <!-- Weave strips -->
+            <path d="M10,15 H90 M10,35 H90 M10,55 H90" stroke="#f59e0b" stroke-width="4"/>
+            <path d="M25,5 V70 M50,5 V70 M75,5 V70" stroke="#fbbf24" stroke-width="4" stroke-dasharray="15,15"/>
+          </g>
+          <text x="50%" y="130" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="bold" letter-spacing="2">BIDANG 4: SENI KRAF (TEKAT EMAS & ANYAMAN)</text>
+        </svg>
+      `;
+
+    default: // Bidang 5: Komunikasi Visual
+      return `
+        <svg viewBox="0 0 400 140" class="w-full h-full max-h-36">
+          <defs>
+            <linearGradient id="roseG" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fb7185"/>
+              <stop offset="100%" stop-color="#e11d48"/>
+            </linearGradient>
+          </defs>
+          <!-- Camera Body & Typography Letterform A -->
+          <g transform="translate(70, 20)">
+            <!-- Serif Anatomy 'A' -->
+            <text x="30" y="70" font-family="Cinzel, serif" font-size="65" font-weight="900" fill="url(#roseG)" stroke="#ffe4e6" stroke-width="1">A</text>
+            <!-- Baseline guideline -->
+            <line x1="5" y1="72" x2="85" y2="72" stroke="#38bdf8" stroke-width="2" stroke-dasharray="3,3"/>
+            <text x="90" y="75" font-size="9" fill="#38bdf8" font-family="monospace">Baseline</text>
+          </g>
+          <!-- Camera Lens Aperture / Rule of Thirds -->
+          <g transform="translate(230, 15)">
+            <rect x="0" y="10" width="110" height="75" rx="12" fill="#1e293b" stroke="#f43f5e" stroke-width="2"/>
+            <!-- Flash & Button -->
+            <rect x="75" y="4" width="18" height="6" rx="2" fill="#94a3b8"/>
+            <circle cx="20" cy="22" r="4" fill="#fb7185"/>
+            <!-- Lens with Aperture Blades -->
+            <circle cx="55" cy="48" r="26" fill="#0f172a" stroke="#fda4af" stroke-width="2"/>
+            <circle cx="55" cy="48" r="14" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5"/>
+            <!-- Rule of thirds lines inside viewfinder -->
+            <line x1="46" y1="24" x2="46" y2="72" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+            <line x1="64" y1="24" x2="64" y2="72" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+          </g>
+          <text x="50%" y="130" text-anchor="middle" fill="#fb7185" font-size="12" font-weight="bold" letter-spacing="2">BIDANG 5: KOMUNIKASI VISUAL (TIPOGRAFI & KAMERA)</text>
+        </svg>
+      `;
+  }
+}
+
+/* =====================================================================
+   QUESTION RENDER & INTERACTION LOGIC
+   ===================================================================== */
+function loadQuestion() {
+  clearInterval(gameState.timerInterval);
+  gameState.isAnswerSubmitted = false;
+
+  const q = gameState.activeQuestions[gameState.currentQuestionIndex];
+  setupRoundRules();
+
+  // Reset host bubble & feedback
+  document.getElementById("hostBubble").classList.add("hidden");
+  document.getElementById("feedbackCard").classList.add("hidden");
+
+  // Meta text
+  document.getElementById("topicTag").innerHTML = `<i class="fa-solid fa-layer-group"></i> <span>${q.bidang}</span>`;
+  document.getElementById("questionStepBadge").innerText = `Soalan ${gameState.currentQuestionIndex + 1} / ${gameState.activeQuestions.length}`;
+  document.getElementById("questionText").innerText = q.question;
+
+  // Render SVG graphic
+  document.getElementById("stageVisualGraphic").innerHTML = generateStageSVG(q.svgType, q.bidang);
+
+  // Sediakan pilihan jawapan dan shuffle susunannya secara dinamik
+  // Setiap item menyimpan teks dan penanda sama ada ia jawapan yang betul
+  const shuffledChoices = q.options.map((opt, originalIdx) => ({
+    text: opt,
+    isCorrect: originalIdx === q.correct
+  }));
+
+  // Fisher-Yates Shuffle untuk rawakkan kedudukan pilihan A, B, C, D
+  for (let i = shuffledChoices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledChoices[i], shuffledChoices[j]] = [shuffledChoices[j], shuffledChoices[i]];
+  }
+
+  // Cari kedudukan indeks jawapan betul yang baharu selepas di-shuffle
+  const correctNewIndex = shuffledChoices.findIndex(choice => choice.isCorrect);
+  gameState.currentQuestionCorrectIndex = correctNewIndex;
+
+  // Render 4 answer choices (TV Studio Podium Buttons)
+  const container = document.getElementById("optionsContainer");
+  container.innerHTML = "";
+
+  const optionLabels = ["A", "B", "C", "D"];
+  shuffledChoices.forEach((choice, idx) => {
+    const btn = document.createElement("button");
+    btn.id = `optionBtn_${idx}`;
+    btn.onclick = () => selectAnswer(idx);
+    btn.className = "option-btn btn-stage w-full p-4 rounded-2xl bg-black/50 hover:bg-white/10 border border-white/15 text-left flex items-start gap-3 text-sm text-gray-200 shadow-md transition group";
+
+    btn.innerHTML = `
+      <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-600 text-slate-950 font-black flex items-center justify-center shrink-0 font-tv group-hover:scale-110 transition">
+        ${optionLabels[idx]}
+      </span>
+      <span class="pt-1 flex-1 font-medium leading-snug">${choice.text}</span>
+    `;
+    container.appendChild(btn);
+  });
+
+  // Start round countdown
+  startTimer(gameState.roundTotalSeconds);
+}
+
+function startTimer(seconds) {
+  gameState.timeLeft = seconds;
+  const timerCircle = document.getElementById("timerCircle");
+  const timerText = document.getElementById("timerText");
+
+  timerText.innerText = gameState.timeLeft;
+  timerCircle.style.strokeDasharray = "100, 100";
+  timerCircle.className = "text-yellow-400 transition-all duration-1000 ease-linear";
+
+  gameState.timerInterval = setInterval(() => {
+    gameState.timeLeft--;
+    timerText.innerText = gameState.timeLeft;
+    playTickSound();
+
+    const percentage = (gameState.timeLeft / seconds) * 100;
+    timerCircle.style.strokeDasharray = `${percentage}, 100`;
+
+    if (gameState.timeLeft <= 5) {
+      timerCircle.className = "text-red-500 transition-all duration-1000 ease-linear animate-pulse";
+      timerText.classList.add("text-red-400");
+    }
+
+    if (gameState.timeLeft <= 0) {
+      clearInterval(gameState.timerInterval);
+      handleTimeout();
+    }
+  }, 1000);
+}
+
+function handleTimeout() {
+  if (gameState.isAnswerSubmitted) return;
+  gameState.isAnswerSubmitted = true;
+  playWrongSound();
+
+  const correctIdx = gameState.currentQuestionCorrectIndex;
+  showAnswerFeedback(false, correctIdx, "Masa tamat! Anda tidak sempat mengunci jawapan di podium.");
+
+  gameState.wrongCount++;
+  gameState.totalAnswered++;
+  updateScoreUI();
+}
+
+function selectAnswer(selectedIndex) {
+  if (gameState.isAnswerSubmitted) return;
+  gameState.isAnswerSubmitted = true;
+  clearInterval(gameState.timerInterval);
+
+  const correctIdx = gameState.currentQuestionCorrectIndex;
+  const isCorrect = (selectedIndex === correctIdx);
+
+  let pointDelta = 0;
+  if (gameState.currentRound === 1) {
+    pointDelta = isCorrect ? 100 : 0;
+  } else if (gameState.currentRound === 2) {
+    pointDelta = isCorrect ? 200 : -50;
+  } else {
+    pointDelta = isCorrect ? 500 : 0;
+  }
+
+  if (isCorrect) {
+    gameState.score += pointDelta;
+    gameState.correctCount++;
+    playCorrectSound();
+    triggerMiniConfetti();
+    showAnswerFeedback(true, selectedIndex, `TAHNIAH! Jawapan anda tepat sekali. (+${pointDelta} Mata)`);
+  } else {
+    gameState.score = Math.max(0, gameState.score + pointDelta);
+    gameState.wrongCount++;
+    playWrongSound();
+    showAnswerFeedback(false, correctIdx, `KURANG TEPAT! Jawapan sebenar ialah pilihan (${["A","B","C","D"][correctIdx]}). ${pointDelta < 0 ? `(${pointDelta} Mata)` : ''}`);
+  }
+
+  gameState.totalAnswered++;
+  updateScoreUI();
+}
+
+function showAnswerFeedback(isCorrect, correctIndex, customTitle) {
+  const q = gameState.activeQuestions[gameState.currentQuestionIndex];
+  const feedbackCard = document.getElementById("feedbackCard");
+  const feedbackIcon = document.getElementById("feedbackIcon");
+  const feedbackTitle = document.getElementById("feedbackTitle");
+  const feedbackRationale = document.getElementById("feedbackRationale");
+
+  // Highlight answer buttons
+  for (let i = 0; i < 4; i++) {
+    const btn = document.getElementById(`optionBtn_${i}`);
+    if (!btn) continue;
+    btn.disabled = true;
+    if (i === correctIndex) {
+      btn.className = "option-btn w-full p-4 rounded-2xl bg-emerald-600/30 border-2 border-emerald-400 text-left flex items-start gap-3 text-sm text-emerald-200 shadow-lg shadow-emerald-500/20";
+    } else {
+      btn.className = "option-btn w-full p-4 rounded-2xl bg-black/30 border border-white/5 text-left flex items-start gap-3 text-sm text-gray-500 opacity-50";
+    }
+  }
+
+  feedbackCard.classList.remove("hidden");
+  if (isCorrect) {
+    feedbackIcon.className = "w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-400 flex items-center justify-center text-xl shrink-0";
+    feedbackIcon.innerHTML = `<i class="fa-solid fa-check"></i>`;
+    feedbackTitle.innerText = customTitle;
+    feedbackTitle.className = "text-sm font-bold text-emerald-400";
+  } else {
+    feedbackIcon.className = "w-10 h-10 rounded-full bg-rose-500/20 text-rose-400 border border-rose-400 flex items-center justify-center text-xl shrink-0";
+    feedbackIcon.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+    feedbackTitle.innerText = customTitle;
+    feedbackTitle.className = "text-sm font-bold text-rose-400";
+  }
+
+  feedbackRationale.innerText = q.rationale;
+
+  // Record into history
+  gameState.sessionHistory.push({
+    questionNum: gameState.currentQuestionIndex + 1,
+    topic: q.bidang,
+    isCorrect: isCorrect
+  });
+}
+
+function goToNextQuestion() {
+  gameState.currentQuestionIndex++;
+  if (gameState.currentQuestionIndex < gameState.activeQuestions.length) {
+    loadQuestion();
+  } else {
+    showFinalResults();
+  }
+}
+
+/* =====================================================================
+   LIFELINE FEATURES (50:50 & PETUNJUK HOS)
+   ===================================================================== */
+function updateLifelinesUI() {
+  const btn5050 = document.getElementById("btnLife5050");
+  const btnHint = document.getElementById("btnLifeHint");
+
+  if (!gameState.lifeline5050Available) {
+    btn5050.disabled = true;
+    btn5050.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-700/50 text-gray-500 text-xs font-bold border border-white/5 cursor-not-allowed line-through";
+  }
+  if (!gameState.lifelineHintAvailable) {
+    btnHint.disabled = true;
+    btnHint.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-700/50 text-gray-500 text-xs font-bold border border-white/5 cursor-not-allowed line-through";
+  }
+}
+
+function useLifeline5050() {
+  if (!gameState.lifeline5050Available || gameState.isAnswerSubmitted) return;
+  gameState.lifeline5050Available = false;
+  updateLifelinesUI();
+
+  playTone(750, 'sine', 0.2, 0.25);
+  showToast("Talian Hayat 50:50 Digunakan! Dua pilihan salah telah dipadamkan.", "info");
+
+  const correctIdx = gameState.currentQuestionCorrectIndex;
+  const wrongIndices = [0, 1, 2, 3].filter(idx => idx !== correctIdx);
+  wrongIndices.sort(() => 0.5 - Math.random());
+
+  // Eliminate 2 wrong choices
+  const toEliminate = [wrongIndices[0], wrongIndices[1]];
+  toEliminate.forEach(idx => {
+    const btn = document.getElementById(`optionBtn_${idx}`);
+    if (btn) {
+      btn.disabled = true;
+      btn.style.visibility = "hidden";
+    }
+  });
+}
+
+function useLifelineHint() {
+  if (!gameState.lifelineHintAvailable || gameState.isAnswerSubmitted) return;
+  gameState.lifelineHintAvailable = false;
+  updateLifelinesUI();
+
+  playTone(850, 'triangle', 0.25, 0.25);
+  const q = gameState.activeQuestions[gameState.currentQuestionIndex];
+  const hostBubble = document.getElementById("hostBubble");
+  const hostText = document.getElementById("hostBubbleText");
+
+  hostText.innerText = q.hint;
+  hostBubble.classList.remove("hidden");
+  showToast("Petunjuk Hos TV dibuka!", "info");
+}
+
+/* =====================================================================
+   SCORE & STATS UI UPDATE
+   ===================================================================== */
+function updateScoreUI() {
+  document.getElementById("scoreDisplay").innerText = gameState.score;
+  document.getElementById("statCorrect").innerText = gameState.correctCount;
+  document.getElementById("statWrong").innerText = gameState.wrongCount;
+
+  const total = gameState.correctCount + gameState.wrongCount;
+  const acc = total > 0 ? Math.round((gameState.correctCount / total) * 100) : 0;
+  document.getElementById("statAccuracy").innerText = `${acc}%`;
+}
+
+/* =====================================================================
+   PODIUM & RESULTS CALCULATIONS
+   ===================================================================== */
+function showFinalResults() {
+  clearInterval(gameState.timerInterval);
+  playVictoryFanfare();
+  triggerBigConfetti();
+
+  document.getElementById("viewGame").classList.add("hidden");
+  document.getElementById("viewResults").classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const totalQ = gameState.activeQuestions.length;
+  const accuracy = Math.round((gameState.correctCount / totalQ) * 100);
+
+  document.getElementById("finalScore").innerText = gameState.score;
+  document.getElementById("finalAccuracy").innerText = `${accuracy}%`;
+  document.getElementById("finalAnswered").innerText = `${gameState.correctCount} / ${totalQ}`;
+
+  // Calculate TV Game Show Grade
+  let grade = "C";
+  let celebration = "Usaha yang baik! Ulang kaji lagi nota untuk memperkemas kemahiran visual anda.";
+  if (gameState.score >= 3000) {
+    grade = "JUARA EMAS (A+)";
+    celebration = "Luar Biasa! Anda layak dinobatkan sebagai Juara Mutlak Pentas Seni Visual Tingkatan 3!";
+  } else if (gameState.score >= 2000) {
+    grade = "CEMERLANG (A)";
+    celebration = "Syabas! Penguasaan teori dan sejarah seni visual anda sangat membanggakan!";
+  } else if (gameState.score >= 1200) {
+    grade = "KEPUJIAN (B)";
+    celebration = "Tahniah! Anda melepasi standard pentas utama dengan jayanya.";
+  }
+
+  document.getElementById("finalGrade").innerText = grade;
+  document.getElementById("resultCelebrationMsg").innerText = celebration;
+}
+
+/* =====================================================================
+   GOOGLE SHEET INTEGRATION & DATA EXPORT
+   ===================================================================== */
+function openConfigModal() {
+  document.getElementById("configSheetUrl").value = gameState.googleSheetUrl;
+  document.getElementById("modalConfig").classList.remove("hidden");
+}
+
+function closeConfigModal() {
+  document.getElementById("modalConfig").classList.add("hidden");
+}
+
+function saveConfigSettings() {
+  const url = document.getElementById("configSheetUrl").value.trim();
+  if (url) {
+    gameState.googleSheetUrl = url;
+    showToast("URL Google Sheet guru berjaya disimpan!", "success");
+  }
+  closeConfigModal();
+}
+
+async function submitResultToGoogleSheet() {
+  const btn = document.getElementById("btnSubmitToTeacher");
+  const msgDiv = document.getElementById("submitResultMsg");
+  const badge = document.getElementById("sheetStatusBadge");
+
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>MENGHANTAR DATA...</span>`;
+  msgDiv.className = "hidden text-xs p-3 rounded-xl";
+
+  const payload = {
+    tarikhMasa: new Date().toLocaleString("ms-MY"),
+    namaPelajar: gameState.studentName,
+    kelas: gameState.studentClass,
+    jumlahMata: gameState.score,
+    bilanganBetul: gameState.correctCount,
+    jumlahSoalan: gameState.activeQuestions.length,
+    peratusKetepatan: `${Math.round((gameState.correctCount / gameState.activeQuestions.length) * 100)}%`,
+    gred: document.getElementById("finalGrade").innerText
+  };
+
+  try {
+    // Post to Google Apps Script / Webhook Endpoint
+    // Use no-cors mode to ensure request dispatches smoothly even with cross-origin restrictions
+    await fetch(gameState.googleSheetUrl, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>BERJAYA DIHANTAR</span>`;
+    btn.className = "w-full sm:w-auto px-6 py-3 rounded-xl bg-emerald-600 text-white font-extrabold text-xs font-tv tracking-wider shadow-lg shadow-emerald-500/30";
+    badge.className = "text-[11px] px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-400/30";
+    badge.innerText = "Dihantar ke Google Sheet";
+
+    msgDiv.classList.remove("hidden");
+    msgDiv.className = "text-xs p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-400/40 text-emerald-200";
+    msgDiv.innerHTML = `<strong>Data Berjaya Direkodkan!</strong> Rekod markah murid ${gameState.studentName} (${gameState.studentClass}) telah dihantar ke pengkalan data Google Sheet guru.`;
+    playTone(800, 'triangle', 0.2, 0.2);
+  } catch (err) {
+    console.warn("Ralat penghantaran:", err);
+    btn.disabled = false;
+    btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>CUBA HANTAR SEMULA</span>`;
+    msgDiv.classList.remove("hidden");
+    msgDiv.className = "text-xs p-3.5 rounded-xl bg-amber-950/60 border border-amber-400/40 text-amber-200";
+    msgDiv.innerHTML = `Penyambungan terus memerlukan Google Script aktif. Anda juga boleh menekan butang <strong>"SALIN SLIP KEPUTUSAN"</strong> di sebelah untuk diserahkan kepada guru melalui WhatsApp/Telegram.`;
+  }
+}
+
+function copyResultSummary() {
+  const textSummary = `
+🏆 SLIP KEPUTUSAN PENTAS JUARA SENI VISUAL TINGKATAN 3 🏆
+============================================
+Nama Peserta  : ${gameState.studentName}
+Kelas         : ${gameState.studentClass}
+Jumlah Mata   : ${gameState.score} Mata
+Ketepatan     : ${Math.round((gameState.correctCount / gameState.activeQuestions.length) * 100)}% (${gameState.correctCount}/${gameState.activeQuestions.length} Soalan)
+Gred Pentas   : ${document.getElementById("finalGrade").innerText}
+Tarikh/Masa   : ${new Date().toLocaleString("ms-MY")}
+============================================
+Pendidikan Seni Visual KSSM Tingkatan 3
+  `.trim();
+
+  const tempTextArea = document.createElement("textarea");
+  tempTextArea.value = textSummary;
+  document.body.appendChild(tempTextArea);
+  tempTextArea.select();
+  document.execCommand("copy");
+  document.body.removeChild(tempTextArea);
+
+  showToast("Slip keputusan disalin ke papan klip!", "success");
+  playTone(600, 'sine', 0.1, 0.2);
+}
+
+function downloadCSVReport() {
+  const headers = ["Nama", "Kelas", "Jumlah Mata", "Bilangan Betul", "Jumlah Soalan", "Peratus", "Tarikh"];
+  const row = [
+    `"${gameState.studentName}"`,
+    `"${gameState.studentClass}"`,
+    gameState.score,
+    gameState.correctCount,
+    gameState.activeQuestions.length,
+    `"${Math.round((gameState.correctCount / gameState.activeQuestions.length) * 100)}%"`,
+    `"${new Date().toLocaleString("ms-MY")}"`
+  ];
+
+  const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + row.join(",");
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", `Keputusan_PSV_T3_${gameState.studentName.replace(/\s+/g, '_')}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  showToast("Laporan CSV berjaya dimuat turun", "success");
+}
+
+function restartFullGame() {
+  initGameSession();
+}
+
+function goToStudyNotesFromResults() {
+  document.getElementById("viewResults").classList.add("hidden");
+  document.getElementById("viewNotes").classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* =====================================================================
+   ANIMATIONS & VISUAL EFFECTS
+   ===================================================================== */
+function triggerMiniConfetti() {
+  if (typeof confetti === 'function') {
+    confetti({
+      particleCount: 25,
+      spread: 60,
+      origin: { y: 0.7 }
+    });
+  }
+}
+
+function triggerBigConfetti() {
+  if (typeof confetti === 'function') {
+    const end = Date.now() + 2.5 * 1000;
+    const colors = ['#facc15', '#3b82f6', '#ec4899', '#10b981'];
+
+    (function frame() {
+      confetti({
+        particleCount: 4,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: colors
+      });
+      confetti({
+        particleCount: 4,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: colors
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    }());
+  }
+}
+
+function showToast(msg, type = "info") {
+  const toast = document.getElementById("toastNotification");
+  const icon = document.getElementById("toastIcon");
+  const text = document.getElementById("toastMsg");
+
+  text.innerText = msg;
+  if (type === "success") {
+    icon.className = "fa-solid fa-circle-check text-emerald-400 text-base";
+  } else if (type === "warn") {
+    icon.className = "fa-solid fa-triangle-exclamation text-amber-400 text-base";
+  } else {
+    icon.className = "fa-solid fa-circle-info text-cyan-400 text-base";
+  }
+
+  toast.classList.remove("translate-y-24", "opacity-0");
+  toast.classList.add("translate-y-0", "opacity-100");
+
+  setTimeout(() => {
+    toast.classList.add("translate-y-24", "opacity-0");
+    toast.classList.remove("translate-y-0", "opacity-100");
+  }, 2800);
+}
+
+// Window Onload Initialization
+window.onload = function() {
+  console.log("Pentas Juara Seni Visual Tingkatan 3 diaktifkan.");
+};
+</script>
+
+</body>
+</html>
